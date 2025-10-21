@@ -19,6 +19,24 @@ Dette repository indeholder globale standarder, agents, commands og templates fo
 
 ## 🎯 Anvendelse
 
+### Automatisk Bootstrap ved Session Start
+
+**Implementeret:** Smart Lazy Loading (Anbefaling 1)
+
+Ved hver ny Claude Code session injicerer UserPromptSubmit hook automatisk bootstrap-instruktioner.
+
+**Hvordan det virker:**
+1. Hook kører ved første prompt (`~/.claude/hooks/ensure-bootstrap.sh`)
+2. Injicerer mandatory reminder til at læse bootstrap-workflow
+3. Auto-approval regler tillader friction-free læsning af `.claude/rules/**`
+4. Claude læser relevante standarder baseret på projekttype
+
+**Auto-approved reads:**
+- `~/.claude/rules/**` - Alle globale standarder
+- `~/Documents/R/*/CLAUDE.md` - Projekt-specifikke instruktioner
+
+**Resultat:** Deterministisk bootstrap uden manuel intervention.
+
 ### I Projekter
 
 Projekter refererer til disse globale standarder via deres `CLAUDE.md`:
