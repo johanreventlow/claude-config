@@ -1,0 +1,27 @@
+# Git ignore for ~/.claude/
+
+# Exclude runtime/session files (Claude Code internals)
+debug/
+downloads/
+file-history/
+history.jsonl
+ide/
+plugins/
+projects/
+session-env/
+shell-snapshots/
+statsig/
+todos/
+settings.json
+.DS_Store
+
+# Keep these (our configuration)
+!rules/
+!agents/
+!commands/
+!templates/
+!README.md
+!.gitignore
+
+# Exclude stray CLAUDE.md (projects have their own)
+CLAUDE.md
