@@ -35,16 +35,16 @@ Systematisk tilgang til debugging, problemløsning og fejldiagnose.
 
 ```r
 # ✅ GOD: Minimal, isoleret, reproducerbar
-library(SPCify)
+library(MyApp)
 test_data <- data.frame(
-  date = seq(as.Date("2025-01-01"), by = "day", length.out = 10),
+  id = 1:10,
   value = c(0.1, 0.12, 0.11, NA, 0.15, 0.13, 0.09, 0.14, 0.12, 0.11)
 )
-create_spc_chart(test_data, "date", "value")
+process_data(test_data)
 # Error: [SPECIFIC ERROR MESSAGE]
 
 # ❌ DÅRLIG: Uklart, afhængig af ekstern state
-# "Det virker ikke når jeg uploader"
+# "Det virker ikke når jeg kører det"
 ```
 
 ### 1.3 Information Collection
@@ -377,11 +377,11 @@ ls()       # What's in environment?
 
 ```r
 # Isolér fejl med test
-test_that("column detection handles NA", {
+test_that("data processing handles NA values", {
   data <- data.frame(x = c(1, 2, NA), y = c("a", "b", "c"))
-  result <- detect_columns(data)
-  expect_equal(result$x, "numeric")
-  expect_equal(result$y, "character")
+  result <- process_data(data)
+  expect_equal(nrow(result), 2)  # NA row handled
+  expect_equal(result$x, c(1, 2))
 })
 
 # Run single test
@@ -411,16 +411,16 @@ Template:
 **References:** ADR-001, PR#123
 ```
 
-### 4.2 Reporting to maintainer
+### 4.2 Reporting to External Package Maintainers
 
-Hvis problem skyldes ekstern pakke (BFHcharts, BFHtheme):
+Hvis problem skyldes ekstern pakke (f.eks. en dependency):
 
 ```
 1. Documenter issue i docs/KNOWN_ISSUES.md
-2. Create GitHub issue med minimal reproducer
+2. Create GitHub issue i external package med minimal reproducer
 3. Tag maintainer: @username
-4. Reference ekstern repo: BFHcharts/issue/123
-5. Implementér workaround i SPCify (mark as temporary)
+4. Reference external repo: package-repo/issue/123
+5. Implementér workaround i dit projekt (mark as temporary)
 ```
 
 ---
@@ -429,28 +429,26 @@ Hvis problem skyldes ekstern pakke (BFHcharts, BFHtheme):
 
 ### 5.1 When to Escalate
 
-**Escalate to BFHcharts if:**
-- Core chart rendering bugs
-- Statistiske beregningsfejl
-- Manglende chart types eller features
-- BFHcharts API limitations
-- Performance issues i BFHcharts algorithms
+**Escalate to external package if:**
+- Core functionality bugs i pakken
+- API limitations eller design flaws
+- Performance issues i pakke algorithms
+- Manglende features eller feature requests
 
-**Handle in SPCify if:**
-- Parameter mapping (qicharts2 → BFHcharts)
-- UI integration og Shiny reaktivitet
+**Handle in your project if:**
+- Integration layer issues
 - Data preprocessing og validering
-- Fejlbeskeder og dansk lokalisering
-- SPCify-specifik caching
+- Error messages og lokalisering
+- Project-specific caching eller optimization
 
 ### 5.2 Escalation Template
 
 ```
-## Escalation to BFHcharts
+## Escalation to [External Package Name]
 
 **Summary:** [Kort beskrivelse]
 
-**Issue in SPCify:** docs/KNOWN_ISSUES.md#123
+**Issue in your project:** docs/KNOWN_ISSUES.md#123
 
 **MRE:**
 [Minimal reproducer showing problem]
@@ -464,7 +462,7 @@ Hvis problem skyldes ekstern pakke (BFHcharts, BFHtheme):
 **Suggested fix:**
 [Hvis du har idé]
 
-**Workaround in SPCify:**
+**Workaround in your project:**
 [Midlertidig løsning]
 ```
 
@@ -476,7 +474,7 @@ Hvis problem skyldes ekstern pakke (BFHcharts, BFHtheme):
 
 ```r
 # ✅ Debug-mode flag
-if (isTRUE(getOption("spc.debug", FALSE))) {
+if (isTRUE(getOption("myapp.debug", FALSE))) {
   log_debug("[DEBUG]", "Verbose logging enabled")
 }
 

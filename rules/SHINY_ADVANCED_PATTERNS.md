@@ -10,13 +10,13 @@ Avancerede mønstre, anti-patterns, og best practices for Shiny applikationer.
 
 ```r
 # ✅ KORREKT: Centraliseret event-bus
-emit$data_updated(context = "upload")     # Erstatter: data_loaded + data_changed
-emit$auto_detection_completed()
+emit$data_loaded()        # Replaces multiple ad-hoc triggers
+emit$processing_completed()
 emit$ui_sync_requested()
 
-observeEvent(app_state$events$data_updated, ignoreInit = TRUE,
+observeEvent(app_state$events$data_loaded, ignoreInit = TRUE,
   priority = OBSERVER_PRIORITIES$HIGH, {
-  handle_data_update()
+  process_loaded_data()
 })
 ```
 
@@ -55,7 +55,7 @@ observeEvent(legacy_trigger(), { ... })
 ```r
 # ✅ App state som single source of truth
 app_state$data$current_data <- new_data
-app_state$columns$mappings$x_column <- detected_column
+app_state$ui$current_selection <- detected_value
 app_state$session$auto_save_enabled <- TRUE
 
 # ❌ FORKERT: Lokale reactiveVal spredt omkring
@@ -67,29 +67,29 @@ local_state <- reactiveVal(NULL)
 
 ```r
 # ✅ KORREKT: Hierarkisk organisation
-app_state$columns$auto_detect$in_progress
-app_state$columns$mappings$x_column
-app_state$columns$ui_sync$needed
+app_state$processing$in_progress
+app_state$ui$selected_item
+app_state$ui$sync$needed
 
 # ❌ FORKERT: Flad struktur
-app_state$auto_detected_columns      # Brug: auto_detect$results
-app_state$x_column                   # Brug: mappings$x_column
+app_state$is_processing              # Brug: processing$in_progress
+app_state$item                       # Brug: ui$selected_item
 ```
 
 ### 2.3 Atomiske Opdateringer
 
 ```r
 # ✅ KORREKT: Atomic update
-safe_operation("Update column mapping", {
-  app_state$columns$mappings$x_column <- detected_col
-  app_state$columns$mappings$y_column <- detected_value
+safe_operation("Update UI state", {
+  app_state$ui$primary_value <- new_primary
+  app_state$ui$secondary_value <- new_secondary
   # Hele operationen eller ingen af delen
 })
 
 # ❌ FORKERT: Separate opdateringer (race condition risk)
-app_state$columns$mappings$x_column <- detected_col
-# Her kunne anden observer trigger hvis y_column mangler
-app_state$columns$mappings$y_column <- detected_value
+app_state$ui$primary_value <- new_primary
+# Her kunne anden observer trigger hvis secondary_value mangler
+app_state$ui$secondary_value <- new_secondary
 ```
 
 ---
@@ -178,13 +178,13 @@ reactive({
 
 ```r
 # ✅ KORREKT: Wrap problematiske reactives
-output$plot <- renderPlot({
-  safe_operation("Chart rendering", {
+output$visualization <- renderPlot({
+  safe_operation("Rendering visualization", {
     req(app_state$data$current_data)
-    req(input$chart_type)
-    create_spc_chart(
+    req(input$render_type)
+    render_visualization(
       app_state$data$current_data,
-      chart_type = input$chart_type
+      type = input$render_type
     )
   }, fallback = NULL)
 })
@@ -219,21 +219,21 @@ output$plot <- renderPlot({
 
 ```r
 # ✅ Guard conditions prevent overlap
-update_column_choices_unified <- function() {
+update_ui_state <- function() {
   # Guard: Check if other operation is running
-  if (app_state$data$updating_table ||
-      app_state$columns$auto_detect$in_progress) {
+  if (app_state$data$processing ||
+      app_state$ui$updating) {
     return()  # Skip hvis anden operation kører
   }
 
   # Safe update
-  app_state$columns$mappings$x_column <- detected_x
+  app_state$ui$current_selection <- new_value
 }
 
 # ❌ FORKERT: Ingen guards
-update_column_choices_unified <- function() {
-  # Podem multiple calls at once!
-  app_state$columns$mappings$x_column <- detected_x
+update_ui_state <- function() {
+  # Kunnen multiple calls at once!
+  app_state$ui$current_selection <- new_value
 }
 ```
 
@@ -272,11 +272,11 @@ observeEvent(input$search_text, {
 
 ```r
 # ✅ OPTIMALT: Package loading
-library(SPCify)  # ~50-100ms
+library(MyApp)  # ~50-100ms (packaged app)
 
 # ❌ LANGSOMT: Source loading (debug mode)
-options(spc.debug.source_loading = TRUE)
-source('global.R')  # ~400ms+
+options(my_app.debug.source_loading = TRUE)
+source('global.R')  # ~400ms+ (not packaged)
 ```
 
 ### 5.2 Lazy Loading for Heavy Components
@@ -284,31 +284,31 @@ source('global.R')  # ~400ms+
 ```r
 LAZY_LOADING_CONFIG <- list(
   heavy_modules = list(
-    file_operations = "R/fct_file_operations.R",
-    advanced_debug = "R/utils_advanced_debug.R",
+    data_processing = "R/fct_data_processing.R",
+    advanced_features = "R/utils_advanced.R",
     performance_monitoring = "R/utils_performance.R",
-    plot_generation = "R/fct_spc_plot_generation.R"
+    rendering = "R/fct_rendering.R"
   )
 )
 
 # Load kun når nødvendigt
-ensure_module_loaded("file_operations")
+ensure_module_loaded("data_processing")
 ```
 
 ### 5.3 Caching Strategy
 
 ```r
-# Cache anti-patterns:
+# Cache strategy:
 CACHE_CONFIG <- list(
-  hospital_branding = list(ttl = 3600),      # 1 hour
-  observer_priorities = list(ttl = 3600),    # 1 hour
-  chart_types_config = list(ttl = 3600)      # 1 hour
+  user_data = list(ttl = 3600),              # 1 hour
+  config_settings = list(ttl = 3600),        # 1 hour
+  computed_results = list(ttl = 1800)        # 30 minutes
 )
 
 # ✅ Cache ved startup
-get_hospital_branding <- function() {
-  if (!is.null(CACHE$hospital_branding)) {
-    return(CACHE$hospital_branding)
+get_cached_data <- function() {
+  if (!is.null(CACHE$user_data)) {
+    return(CACHE$user_data)
   }
   # Compute and cache
 }
@@ -316,10 +316,10 @@ get_hospital_branding <- function() {
 
 ### 5.4 Performance Targets
 
-* **Startup:** < 100ms (achieved: 55-57ms)
-* **Data upload:** < 2s
-* **Chart rendering:** < 1s
-* **Column detection:** < 5s (med stor data)
+* **Startup:** < 100ms
+* **Data operations:** < 2s
+* **Rendering:** < 1s
+* **Complex computations:** < 5s
 
 ---
 
@@ -381,12 +381,12 @@ observeEvent(input$export, {
 ### 7.1 Unit Testing Reactives
 
 ```r
-test_that("data_updated event triggers column detection", {
+test_that("data_loaded event triggers processing", {
   # Setup
   test_data <- data.frame(x = 1:10, y = 11:20)
 
   # Trigger event
-  app_state$events$data_updated$0  # Increment to trigger
+  app_state$events$data_loaded <- app_state$events$data_loaded + 1
   app_state$data$current_data <- test_data
 
   # Verify state
@@ -397,14 +397,14 @@ test_that("data_updated event triggers column detection", {
 ### 7.2 Shiny Test (UI Testing)
 
 ```r
-test_that("Upload button triggers file processing", {
+test_that("Upload button triggers processing", {
   # Use shinytest2 for full app testing
   app <- shinytest2::AppDriver$new(...)
 
   app$upload("file_input", "test_data.csv")
-  app$wait_for_value(input$auto_detect_button, ignore_init = TRUE)
+  app$wait_for_value(output$status, ignore_init = TRUE)
 
-  expect_true(app$get_value(input = "detection_complete"))
+  expect_true(app$is_visible("#success_message"))
 })
 ```
 

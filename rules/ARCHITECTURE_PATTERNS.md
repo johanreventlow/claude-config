@@ -77,15 +77,15 @@ package/
 ```r
 # ✅ KORREKT
 mod_data_loading.R          # Module: mod_*
-fct_calculate_spc.R         # Function file: fct_*
+fct_core_logic.R            # Function file: fct_*
 utils_server_data.R         # Server utils: utils_server_*
 utils_ui_inputs.R           # UI utils: utils_ui_*
-config_chart_types.R        # Config: config_*
+config_settings.R           # Config: config_*
 app_ui.R                    # App: app_*
 
 # ❌ FORKERT
 data_module.R               # Brug mod_ prefix
-calculate_spc.R             # Brug fct_ prefix
+core_logic.R                # Brug fct_ prefix
 helpers.R                   # Vær specifik (utils_server/utils_ui)
 settings.R                  # Brug config_ prefix
 ```
@@ -125,14 +125,14 @@ app_state <- new.env(parent = emptyenv())
 
 app_state$events <- reactiveValues(
   data_loaded = 0L,
-  auto_detection_started = 0L,
-  auto_detection_completed = 0L,
-  columns_detected = 0L,
-  ui_sync_needed = 0L,
-  ui_sync_completed = 0L,
-  navigation_changed = 0L,
+  processing_started = 0L,
+  processing_completed = 0L,
+  data_validated = 0L,
+  ui_refresh_needed = 0L,
+  ui_refresh_completed = 0L,
+  user_action = 0L,
   session_reset = 0L,
-  test_mode_ready = 0L
+  app_ready = 0L
 )
 
 app_state$data <- reactiveValues(
@@ -144,30 +144,20 @@ app_state$data <- reactiveValues(
   table_version = 0
 )
 
-app_state$columns <- reactiveValues(
-  # Hierarchical auto-detection sub-system
-  auto_detect = reactiveValues(
-    in_progress = FALSE,
-    completed = FALSE,
-    results = NULL,
-    trigger = NULL,
-    last_run = NULL,
-    frozen_until_next_trigger = FALSE
-  ),
+app_state$processing <- reactiveValues(
+  # Processing sub-system
+  in_progress = FALSE,
+  completed = FALSE,
+  results = NULL,
+  last_run = NULL,
+  error = NULL
+)
 
-  # Column mappings sub-system
-  mappings = reactiveValues(
-    x_column = NULL, y_column = NULL, n_column = NULL,
-    cl_column = NULL, skift_column = NULL, frys_column = NULL,
-    kommentar_column = NULL
-  ),
-
-  # UI synchronization sub-system
-  ui_sync = reactiveValues(
-    needed = FALSE,
-    last_sync_time = NULL,
-    pending_updates = list()
-  )
+app_state$ui <- reactiveValues(
+  # UI state sub-system
+  current_selection = NULL,
+  display_mode = "normal",
+  pending_updates = list()
 )
 
 app_state$session <- reactiveValues(
@@ -197,7 +187,7 @@ observeEvent(app_state$events$data_loaded,
   ignoreInit = TRUE,
   priority = OBSERVER_PRIORITIES$HIGH, {
   req(app_state$data$current_data)
-  emit$auto_detection_started()
+  emit$processing_started()
 })
 ```
 
@@ -205,13 +195,13 @@ observeEvent(app_state$events$data_loaded,
 
 ```r
 # ✅ KORREKT
-app_state$columns$auto_detect$results
-app_state$columns$mappings$x_column
-app_state$columns$ui_sync$needed
+app_state$processing$results
+app_state$ui$current_selection
+app_state$ui$display_mode
 
 # ❌ FORKERT (legacy/flat)
-app_state$columns$auto_detected_columns  # Brug auto_detect$results
-app_state$columns$x_column               # Brug mappings$x_column
+app_state$results                        # Brug processing$results
+app_state$selection                      # Brug ui$current_selection
 ```
 
 **Fordele:**
@@ -305,7 +295,7 @@ transform_data <- function(data) {
 ❌ Gør IKKE:
 - Automatiske commits uden aftale
 - Stor refaktorering uden godkendelse
-- Ændringer af brand.yml (branding configuration)
+- Ændringer af centrale configuration files
 - Nye dependencies uden diskussion
 - Manuelle NAMESPACE ændringer (brug devtools::document())
 
