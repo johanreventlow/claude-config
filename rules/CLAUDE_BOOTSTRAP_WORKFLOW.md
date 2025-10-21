@@ -6,6 +6,26 @@ Hver gang du starter en session i et projekt, skal jeg automatisk udføre denne 
 
 ---
 
+## 📚 Centraliserede Guidelines Oversigt
+
+**5 nye comprehensive rule files** dækker områder fra CLAUDE.md.backup:
+
+| File | Dækker | Vigtige Områder |
+|------|--------|-----------------|
+| `DEVELOPMENT_PHILOSOPHY.md` | Punkt 11+12 | Philosophy, Communication, ADR'er, Quality standards |
+| `GEMINI_CLI_GUIDE.md` | Punkt 13 | Large codebase analysis med Gemini CLI |
+| `SHINY_ADVANCED_PATTERNS.md` | Punkt 3 | Event architecture, State management, Race conditions |
+| `TROUBLESHOOTING_GUIDE.md` | Punkt 8 | Debugging methodology, Common issues, Escalation |
+| `ARCHITECTURE_PATTERNS.md` | Punkt 6+10 | File organization, State patterns, Modularity |
+
+Derudover eksisterer:
+- `R_STANDARDS.md` - R development conventions
+- `SHINY_STANDARDS.md` - Shiny best practices
+- `GIT_WORKFLOW.md` - Git workflow + OBLIGATORISKE regler
+- `QUARTO_STANDARDS.md` - Quarto development
+
+---
+
 ## 🚀 Bootstrap Procedure (Trin for Trin)
 
 ### Trin 1: Identificer Projekttypen
@@ -25,43 +45,65 @@ Baseret på projekttype, læs automatisk disse filer:
 
 #### 🟦 Shiny Application
 ```
-Altid læs:
+ALTID læs (centraliseret guides):
 - ~/.claude/rules/R_STANDARDS.md
 - ~/.claude/rules/SHINY_STANDARDS.md
+- ~/.claude/rules/SHINY_ADVANCED_PATTERNS.md
 - ~/.claude/rules/GIT_WORKFLOW.md
+- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
+
+Specifikke projekter:
+- ~/.claude/rules/ARCHITECTURE_PATTERNS.md (hvis relevant)
+- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
 
 Derefter:
-- Lokal CLAUDE.md (projekt-specifik)
+- Lokal CLAUDE.md (projekt-specifik override)
 ```
 
 #### 📦 R Package
 ```
-Altid læs:
+ALTID læs (centraliseret guides):
 - ~/.claude/rules/R_STANDARDS.md
+- ~/.claude/rules/ARCHITECTURE_PATTERNS.md
 - ~/.claude/rules/GIT_WORKFLOW.md
+- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
+
+Specifikke projekter:
+- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
+- ~/.claude/rules/GEMINI_CLI_GUIDE.md (for codebase analyse)
 
 Derefter:
-- Lokal CLAUDE.md (projekt-specifik)
+- Lokal CLAUDE.md (projekt-specifik override)
 ```
 
 #### 📄 Quarto Website/Publication
 ```
-Altid læs:
+ALTID læs (centraliseret guides):
 - ~/.claude/rules/QUARTO_STANDARDS.md
 - ~/.claude/rules/GIT_WORKFLOW.md
+- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
+
+Specifikke projekter:
+- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
 
 Derefter:
-- Lokal CLAUDE.md (projekt-specifik)
+- Lokal CLAUDE.md (projekt-specifik override)
 ```
 
 #### 🔧 Generic R Project
 ```
-Altid læs:
+ALTID læs (centraliseret guides):
 - ~/.claude/rules/R_STANDARDS.md
+- ~/.claude/rules/ARCHITECTURE_PATTERNS.md
 - ~/.claude/rules/GIT_WORKFLOW.md
+- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
+
+Specifikke projekter:
+- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
+- ~/.claude/rules/GEMINI_CLI_GUIDE.md (for codebase analyse)
 
 Derefter:
-- Lokal CLAUDE.md (projekt-specifik)
+- Lokal CLAUDE.md (projekt-specifik override)
 ```
 
 ### Trin 3: Anvend Standarderne
