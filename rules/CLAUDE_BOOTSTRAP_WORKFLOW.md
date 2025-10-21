@@ -1,134 +1,91 @@
 # Claude Bootstrap Workflow
 
-**Denne fil dokumenterer PROCEDUREN som Claude følger når arbejde starter i et af dine projekter.**
-
-Hver gang du starter en session i et projekt, skal jeg automatisk udføre denne bootstrap-procedure.
+Bootstrap-procedure som Claude følger når arbejde starter i et projekt.
 
 ---
 
-## 📚 Centraliserede Guidelines Oversigt
+## Bootstrap Procedure
 
-**5 nye comprehensive rule files** dækker områder fra CLAUDE.md.backup:
+### Trin 1: Identificer Projekttype
 
-| File | Dækker | Vigtige Områder |
-|------|--------|-----------------|
-| `DEVELOPMENT_PHILOSOPHY.md` | Punkt 11+12 | Philosophy, Communication, ADR'er, Quality standards |
-| `GEMINI_CLI_GUIDE.md` | Punkt 13 | Large codebase analysis med Gemini CLI |
-| `SHINY_ADVANCED_PATTERNS.md` | Punkt 3 | Event architecture, State management, Race conditions |
-| `TROUBLESHOOTING_GUIDE.md` | Punkt 8 | Debugging methodology, Common issues, Escalation |
-| `ARCHITECTURE_PATTERNS.md` | Punkt 6+10 | File organization, State patterns, Modularity |
+Læs lokal `CLAUDE.md` → find `## Project Overview` → identificer type:
+- **Shiny** | **R Package** | **Quarto** | **Generic**
 
-Derudover eksisterer:
-- `R_STANDARDS.md` - R development conventions
-- `SHINY_STANDARDS.md` - Shiny best practices
-- `GIT_WORKFLOW.md` - Git workflow + OBLIGATORISKE regler
-- `QUARTO_STANDARDS.md` - Quarto development
+### Trin 2: Læs Globale Standarder
 
----
+**🟦 Shiny Application**
+```
+ALTID læs:
+- R_STANDARDS.md
+- SHINY_STANDARDS.md
+- SHINY_ADVANCED_PATTERNS.md
+- GIT_WORKFLOW.md
+- DEVELOPMENT_PHILOSOPHY.md
 
-## 🚀 Bootstrap Procedure (Trin for Trin)
-
-### Trin 1: Identificer Projekttypen
-
-Læs den lokale `CLAUDE.md` og find `## Project Overview` sektionen:
-
-```markdown
-## Project Overview
-
-**[Project Name]** - [Beskrivelse]
-**Type:** [Shiny | R Package | Quarto | Generic]
+Ved behov:
+- ARCHITECTURE_PATTERNS.md
+- TROUBLESHOOTING_GUIDE.md
 ```
 
-### Trin 2: Læs Globale Standarder Baseret på Type
-
-Baseret på projekttype, læs automatisk disse filer:
-
-#### 🟦 Shiny Application
+**📦 R Package**
 ```
-ALTID læs (centraliseret guides):
-- ~/.claude/rules/R_STANDARDS.md
-- ~/.claude/rules/SHINY_STANDARDS.md
-- ~/.claude/rules/SHINY_ADVANCED_PATTERNS.md
-- ~/.claude/rules/GIT_WORKFLOW.md
-- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
+ALTID læs:
+- R_STANDARDS.md
+- ARCHITECTURE_PATTERNS.md
+- GIT_WORKFLOW.md
+- DEVELOPMENT_PHILOSOPHY.md
 
-Specifikke projekter:
-- ~/.claude/rules/ARCHITECTURE_PATTERNS.md (hvis relevant)
-- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
-
-Derefter:
-- Lokal CLAUDE.md (projekt-specifik override)
+Ved behov:
+- TROUBLESHOOTING_GUIDE.md
+- GEMINI_CLI_GUIDE.md
 ```
 
-#### 📦 R Package
+**📄 Quarto Website/Publication**
 ```
-ALTID læs (centraliseret guides):
-- ~/.claude/rules/R_STANDARDS.md
-- ~/.claude/rules/ARCHITECTURE_PATTERNS.md
-- ~/.claude/rules/GIT_WORKFLOW.md
-- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
+ALTID læs:
+- QUARTO_STANDARDS.md
+- GIT_WORKFLOW.md
+- DEVELOPMENT_PHILOSOPHY.md
 
-Specifikke projekter:
-- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
-- ~/.claude/rules/GEMINI_CLI_GUIDE.md (for codebase analyse)
-
-Derefter:
-- Lokal CLAUDE.md (projekt-specifik override)
+Ved behov:
+- TROUBLESHOOTING_GUIDE.md
 ```
 
-#### 📄 Quarto Website/Publication
+**🔧 Generic R Project**
 ```
-ALTID læs (centraliseret guides):
-- ~/.claude/rules/QUARTO_STANDARDS.md
-- ~/.claude/rules/GIT_WORKFLOW.md
-- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
+ALTID læs:
+- R_STANDARDS.md
+- ARCHITECTURE_PATTERNS.md
+- GIT_WORKFLOW.md
+- DEVELOPMENT_PHILOSOPHY.md
 
-Specifikke projekter:
-- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
-
-Derefter:
-- Lokal CLAUDE.md (projekt-specifik override)
-```
-
-#### 🔧 Generic R Project
-```
-ALTID læs (centraliseret guides):
-- ~/.claude/rules/R_STANDARDS.md
-- ~/.claude/rules/ARCHITECTURE_PATTERNS.md
-- ~/.claude/rules/GIT_WORKFLOW.md
-- ~/.claude/rules/DEVELOPMENT_PHILOSOPHY.md
-
-Specifikke projekter:
-- ~/.claude/rules/TROUBLESHOOTING_GUIDE.md (ved fejlfinding)
-- ~/.claude/rules/GEMINI_CLI_GUIDE.md (for codebase analyse)
-
-Derefter:
-- Lokal CLAUDE.md (projekt-specifik override)
+Ved behov:
+- TROUBLESHOOTING_GUIDE.md
+- GEMINI_CLI_GUIDE.md
 ```
 
 ### Trin 3: Anvend Standarderne
 
-Nu når jeg har læst alle relevante standarder, skal jeg:
-
-1. **Enforce regler** ved code review
-2. **Foreslå struktur** baseret på best practices
-3. **Foreslå git workflow** baseret på GIT_WORKFLOW.md
-4. **Flag afvigelser** fra standarderne
+Efter læsning:
+1. Enforc regler ved code review
+2. Foreslå struktur baseret på best practices
+3. Foreslå git workflow
+4. Flag afvigelser fra standarderne
 
 ---
 
-## 📋 Enforcement Rules (Efter Bootstrap)
+## Enforcement Rules
 
 ### For Alle Projekttyper
 
 ✅ **Gør automatisk:**
 - Læs lokale CLAUDE.md + relevante globale filer
-- Foreslå git branches baseret på GIT_WORKFLOW.md
-- Enforce commit message format
+- Foreslå git branches
+- Enforc commit message format
 - Flag manglende tests
 - Kontroller pre-commit checklist
 
-❌ **Gør IKKE automatisk - OBLIGATORISKE REGLER:**
+❌ **Gør IKKE - OBLIGATORISKE REGLER:**
 - Commit direkte til main/master
 - Merge til main/master uden eksplicit godkendelse
 - Push til remote uden anmodning
@@ -137,108 +94,30 @@ Nu når jeg har læst alle relevante standarder, skal jeg:
 - **ALDRIG tilføj Claude attribution footers** til commits
   - ❌ "🤖 Generated with Claude Code"
   - ❌ "Co-Authored-By: Claude <noreply@anthropic.com>"
-  - ❌ Anden AI attribution
-  - ✅ Commits skal være 100% dine egne
 - Push og merge uden eksplicit instruktion
 
-### For Shiny Apps (Ekstra)
+### Ekstra Enforcement
 
-✅ **Ekstra enforcement:**
-- Kontroller reactive patterns mod SHINY_STANDARDS.md
+**Shiny Apps:**
+- Kontroller reactive patterns
 - Flag potential reactive storms
 - Foreslå reactive prioritization
-- Check for proper error handling
+- Check error handling
 
-### For R Packages (Ekstra)
-
-✅ **Ekstra enforcement:**
+**R Packages:**
 - Kontroller `devtools::check()` status
-- Enforce documentation requirements
+- Enforc documentation requirements
 - Kontroller test coverage
-- Flag NAMESPACE/manual edits
+- Flag NAMESPACE manual edits
 
-### For Quarto (Ekstra)
-
-✅ **Ekstra enforcement:**
+**Quarto:**
 - Kontroller render output
 - Validér listings og cross-references
-- Check for broken links
+- Check broken links
 
 ---
 
-## 🔍 Example: Full Bootstrap in BFHcharts
-
-```
-Session Start in BFHcharts:
-
-1. Læs ~/Documents/R/BFHcharts/CLAUDE.md
-   → Identificer: "R Package" type
-
-2. Læs relevante globale filer:
-   ✅ ~/.claude/rules/R_STANDARDS.md
-   ✅ ~/.claude/rules/GIT_WORKFLOW.md
-
-3. Anvend standarder:
-   - Expect: Roxygen2 documentation
-   - Expect: testthat tests, ≥90% coverage
-   - Expect: devtools::check() pass
-   - Expect: Feature branches (feat/*)
-   - Expect: Dansk commit messages
-   - Expect: TDD approach
-
-4. Work guidet af alle disse standarder
-```
-
----
-
-## 📌 Visual Workflow
-
-```
-┌─────────────────────────────────┐
-│ User starts session in projekt  │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│ Claude: Læs lokal CLAUDE.md     │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│ Claude: Identificer projekttype │
-│ (Shiny? Package? Quarto?)       │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│ Claude: Læs relevante globale   │
-│ standards baseret på type       │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│ Claude: Anvend alle standarder  │
-│ gennem hele session             │
-└─────────────────────────────────┘
-```
-
----
-
-## 🎯 Praktisk Implementering
-
-### Jeg skal spørge mig selv:
-
-```
-1. Hvad er projekttypen? (Scan CLAUDE.md)
-2. Hvilke globale rules skal jeg følge? (Check liste ovenfor)
-3. Har jeg læst dem alle? (Var jeg proaktiv?)
-4. Kan jeg forklare standarderne? (Kunne jeg forsvare mig?)
-5. Giver det mening for projektet? (Eller skal der være project-overrides?)
-```
-
----
-
-## ✅ Checklist for Bootstrap
+## Checklist for Bootstrap
 
 - [ ] Læst lokal CLAUDE.md
 - [ ] Identificeret projekttype
@@ -246,20 +125,6 @@ Session Start in BFHcharts:
 - [ ] Forstået projekt-specifik guidance
 - [ ] Klar til at enforce standarder
 - [ ] Kan foreslå struktur+workflow
-
----
-
-## 📝 Note for Brugeren
-
-**Du behøver ikke at gøre noget!** Jeg udfører denne bootstrap automatisk når jeg starter i et af dine projekter.
-
-Du vil muligvis mærke:
-- Mere konsistente forslag
-- Bedre enforcement af dine standards
-- Proaktive suggestions baseret på best practices
-- Færre spørgsmål om "hvad vil du have?"
-
-Dette kommer fra at jeg læser alle relevante standarder automatisk.
 
 ---
 
