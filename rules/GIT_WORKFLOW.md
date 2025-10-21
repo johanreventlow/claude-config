@@ -21,6 +21,40 @@ git checkout -b docs/dokumentation
 - `test/` - Test-relaterede ændringer
 - `chore/` - Vedligeholdelse
 
+## ⚠️ OBLIGATORISKE REGLER (KRITISK)
+
+**Claude SKAL ALTID følge disse regler:**
+
+1. ❌ **ALDRIG merge til master/main uden eksplicit godkendelse**
+   - Feature branches arbejdes på indtil du siger "merge det"
+
+2. ❌ **ALDRIG push til remote uden anmodning**
+   - Jeg stopper efter lokale commits
+   - Du skal eksplicit sige "push det til remote"
+
+3. ⏸️ **STOP efter feature branch commit – vent på instruktioner**
+   ```bash
+   git checkout -b fix/feature-name
+   # ... arbejd og commit ...
+   git commit -m "beskrivelse"
+   # STOP HER - vent på instruktion
+   # (Ikke: `git push`, `git merge`, osv.)
+   ```
+
+4. ❌ **ALDRIG tilføj Claude attribution footers**
+   - ❌ "🤖 Generated with Claude Code"
+   - ❌ "Co-Authored-By: Claude <noreply@anthropic.com>"
+   - ❌ Anden AI attribution
+   - ✅ Commits skal være 100% dine egne
+
+### Undtagelse: Simple Git Operationer
+
+Disse er OK uden aftale:
+- `git status` - Se hvilke filer der er ændret
+- `git diff` - Vise ændringer
+- `git log` - Vise commit historie
+- Lokale branches uden push/merge
+
 ## Commit Guidelines
 
 ### Commit Messages (Dansk)
@@ -61,6 +95,7 @@ Fixes #42"
 git commit -m "updated stuff"
 git commit -m "fix"
 ```
+
 
 ## Protected Branches
 
