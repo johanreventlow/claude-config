@@ -67,13 +67,13 @@ gemini --all_files -p "Analyze project structure, dependencies, and logging impl
 ### 3.1 Tjek om specifikke features er implementeret
 
 ```bash
-gemini -p "@R/ @modules/ Has the new SPC chart export feature been implemented? Show relevant functions and files"
+gemini -p "@R/ Has the new export feature been implemented? Show relevant functions and files"
 ```
 
 ### 3.2 Verificér logging
 
 ```bash
-gemini -p "@R/utils_logging.R @server.R Is structured logging (using lgr or similar) implemented consistently across modules?"
+gemini -p "@R/ Is structured logging implemented consistently across all modules and functions?"
 ```
 
 ### 3.3 Reaktivitet og performance
@@ -97,7 +97,7 @@ gemini -p "@R/ @data/ Is any caching mechanism (e.g. memoise or duckdb caching) 
 ### 3.6 Testdækning
 
 ```bash
-gemini -p "@tests/ @R/ Are critical modules like data transformation and SPC chart rendering covered by unit tests?"
+gemini -p "@tests/ @R/ Are critical modules and business logic covered by unit tests?"
 ```
 
 ### 3.7 Sikkerhed
@@ -165,7 +165,7 @@ gemini -p "@R/fct_*.R Identify potential performance bottlenecks in file operati
 
 ---
 
-## 6) Integration med SPCify / Shiny App Workflow
+## 6) Integration med Development Workflow
 
 Brug Gemini CLI til:
 
@@ -176,24 +176,32 @@ Brug Gemini CLI til:
 5. **Test coverage gaps** identifikation
 6. **Security audit** af hele codebase
 
-### 6.1 Eksempel Workflow
+### 6.1 Eksempel Workflow (generelt)
 
 ```bash
 # 1. Analysér før refaktorering
-gemini -p "@R/ Analyze current state management patterns and identify areas for centralization"
+gemini -p "@R/ Analyze current architecture and identify areas for improvement"
 
 # 2. Verificér efter implementation
-gemini -p "@R/state_management.R @R/utils_event_system.R Has centralized app_state been implemented consistently?"
+gemini -p "@R/ Has the new pattern been implemented consistently across the codebase?"
 
 # 3. Test coverage check
-gemini -p "@tests/ @R/ Are all critical paths (data load, plot generation, state sync) covered by tests?"
+gemini -p "@tests/ @R/ Are all critical code paths covered by unit tests?"
 
 # 4. Performance audit
-gemini -p "@R/fct_*.R Identify any N+1 queries, inefficient loops, or reactive storms"
+gemini -p "@R/ Identify performance bottlenecks: inefficient loops, missing caches, or circular dependencies"
 
 # 5. Security check
-gemini -p "@R/ Check for SQL injection vulnerabilities, XSS vectors, or unvalidated user input"
+gemini -p "@R/ Check for potential security vulnerabilities: unvalidated inputs, unsafe operations, or data leaks"
 ```
+
+### 6.2 Projekt-Specifik Tilpasning
+
+Juster kommandoer baseret på dit projekt:
+
+- **R Package:** Focus på documentation, test coverage, API design
+- **Shiny App:** Focus på reactive patterns, state management, race conditions
+- **Quarto:** Focus på render performance, listings, cross-references
 
 ---
 
@@ -203,10 +211,10 @@ gemini -p "@R/ Check for SQL injection vulnerabilities, XSS vectors, or unvalida
 
 **God struktur:**
 ```
-"I have a Shiny app with these modules: @R/mod_data.R @R/mod_chart.R
+"I have a Shiny app with these modules: @R/mod_*.R
 
 Are there any state consistency issues between these modules?
-Also check for potential race conditions when data updates."
+Also check for potential race conditions and circular dependencies."
 ```
 
 **Dårlig struktur:**
@@ -220,8 +228,8 @@ Hvis svaret er for overordnet, follow-up:
 ```bash
 gemini -p "... (fra tidligere query)
 
-Now focus specifically on the reactive chain in mod_data.R.
-Show me the exact functions that trigger each observer."
+Now focus specifically on the reactive chain in [specific module].
+Show me the exact functions and dependencies."
 ```
 
 ### 7.3 Sammenligning af Implementeringer
