@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Custom statusLine for SPCify development
-# Shows: Directory | Git Branch | Model | Token Usage
+# Shows: Directory | Git Branch | Model | Cost
+
+# Read JSON input from stdin
+input=$(cat)
 
 # Get current directory (relative to home)
 DIR=$(pwd | sed "s|^$HOME|~|")
@@ -18,12 +21,12 @@ else
     GIT_INFO=""
 fi
 
-# Model name (hardcoded for now - Claude Code doesn't expose this as env var)
-MODEL="Sonnet 4.5"
-
-# Token usage placeholder (Claude Code doesn't expose this as env var yet)
-# This will show "N/A" until Claude Code provides token info
-TOKENS="N/A"
+# Extract model display name from JSON
+if command -v jq &> /dev/null; then
+    MODEL=$(echo "$input" | jq -r '.model.display_name // "Unknown"')
+else
+    MODEL="Unknown (jq not installed)"
+fi
 
 # Output format
-echo "📁 $DIR$GIT_INFO | 🤖 $MODEL | 🎫 $TOKENS"
+echo "📁 $DIR$GIT_INFO | 🤖 $MODEL"
