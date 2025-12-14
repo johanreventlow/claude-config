@@ -17,3 +17,5 @@ Use tools to gather sufficient information about the task.
 If you need clarification on some of the details, ask specific questions to the user ONE AT A TIME.
 
 After gathering sufficient information, produce the improved prompt as markdown and ask the user if they want any changes or additions.
+
+After the user has accepted the final version of the improved prompt, ask them if they want to add the tasks as github issues, and then offer to begin solving the tasks, while remembering to make commits after each logical step.

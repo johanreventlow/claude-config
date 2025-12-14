@@ -64,6 +64,18 @@ Ved behov:
 - GEMINI_CLI_GUIDE.md
 ```
 
+**📋 Projekt-Specifikke Standarder (hvis de findes)**
+```
+OpenSpec Integration:
+- openspec/project.md - Tech stack, conventions, domain context
+- openspec/AGENTS.md - OpenSpec workflow (ved proposals/architecture)
+
+Fordele:
+- Detaljeret projekt-specifik dokumentation
+- Struktureret change management
+- Single source of truth for konventioner
+```
+
 ### Trin 3: Anvend Standarderne
 
 Efter læsning:
@@ -122,11 +134,12 @@ Efter læsning:
 - [ ] Læst lokal CLAUDE.md
 - [ ] Identificeret projekttype
 - [ ] Læst alle relevante globale rules
+- [ ] Læst OpenSpec filer (hvis de findes)
 - [ ] Forstået projekt-specifik guidance
 - [ ] Klar til at enforce standarder
 - [ ] Kan foreslå struktur+workflow
 
 ---
 
-**Sidst opdateret:** 2025-10-21
+**Sidst opdateret:** 2025-11-03
 **Del af:** ~/.claude/ global configuration system
