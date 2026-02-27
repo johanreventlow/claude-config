@@ -21,6 +21,7 @@ ALTID læs:
 - SHINY_ADVANCED_PATTERNS.md
 - GIT_WORKFLOW.md
 - DEVELOPMENT_PHILOSOPHY.md
+- WORKFLOW_PREFERENCES.md
 
 Ved behov:
 - ARCHITECTURE_PATTERNS.md
@@ -34,6 +35,7 @@ ALTID læs:
 - ARCHITECTURE_PATTERNS.md
 - GIT_WORKFLOW.md
 - DEVELOPMENT_PHILOSOPHY.md
+- WORKFLOW_PREFERENCES.md
 
 Ved behov:
 - TROUBLESHOOTING_GUIDE.md
@@ -46,6 +48,7 @@ ALTID læs:
 - QUARTO_STANDARDS.md
 - GIT_WORKFLOW.md
 - DEVELOPMENT_PHILOSOPHY.md
+- WORKFLOW_PREFERENCES.md
 
 Ved behov:
 - TROUBLESHOOTING_GUIDE.md
@@ -58,17 +61,19 @@ ALTID læs:
 - ARCHITECTURE_PATTERNS.md
 - GIT_WORKFLOW.md
 - DEVELOPMENT_PHILOSOPHY.md
+- WORKFLOW_PREFERENCES.md
 
 Ved behov:
 - TROUBLESHOOTING_GUIDE.md
 - GEMINI_CLI_GUIDE.md
 ```
 
-**📋 Projekt-Specifikke Standarder (hvis de findes)**
+**📋 OpenSpec (Standard for alle projekter)**
 ```
 OpenSpec Integration:
-- openspec/project.md - Tech stack, conventions, domain context
-- openspec/AGENTS.md - OpenSpec workflow (ved proposals/architecture)
+- Hvis openspec/ ikke findes: Foreslå `openspec init`
+- Hvis openspec/ findes: Læs openspec/project.md og openspec/AGENTS.md
+- Brug OpenSpec workflow for alle non-trivielle ændringer
 
 Fordele:
 - Detaljeret projekt-specifik dokumentation
@@ -134,12 +139,13 @@ Efter læsning:
 - [ ] Læst lokal CLAUDE.md
 - [ ] Identificeret projekttype
 - [ ] Læst alle relevante globale rules
-- [ ] Læst OpenSpec filer (hvis de findes)
+- [ ] OpenSpec: Initialiseret eller læst eksisterende
+- [ ] Workflow preferences: Læst og klar til enforcement
 - [ ] Forstået projekt-specifik guidance
 - [ ] Klar til at enforce standarder
 - [ ] Kan foreslå struktur+workflow
 
 ---
 
-**Sidst opdateret:** 2025-11-03
+**Sidst opdateret:** 2026-02-27
 **Del af:** ~/.claude/ global configuration system
