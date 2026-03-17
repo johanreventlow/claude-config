@@ -11,6 +11,13 @@ Bootstrap-procedure som Claude følger når arbejde starter i et projekt.
 Læs lokal `CLAUDE.md` → find `## Project Overview` → identificer type:
 - **Shiny** | **R Package** | **Quarto** | **Generic**
 
+### Trin 1b: Detektér Platform
+
+Hvis platform er **Windows** (win32):
+- Læs `WINDOWS_ENVIRONMENT.md` — indeholder R-stier, GitHub-workaround (ingen gh CLI), og shell-detaljer
+- Brug altid fuld sti til R/Rscript (ikke i PATH)
+- Brug aldrig `gh` kommandoer — brug `git` + browser i stedet
+
 ### Trin 2: Læs Globale Standarder
 
 **🟦 Shiny Application**
@@ -138,6 +145,7 @@ Efter læsning:
 
 - [ ] Læst lokal CLAUDE.md
 - [ ] Identificeret projekttype
+- [ ] Detekteret platform (Windows → læs WINDOWS_ENVIRONMENT.md)
 - [ ] Læst alle relevante globale rules
 - [ ] OpenSpec: Initialiseret eller læst eksisterende
 - [ ] Workflow preferences: Læst og klar til enforcement
@@ -147,5 +155,5 @@ Efter læsning:
 
 ---
 
-**Sidst opdateret:** 2026-02-27
+**Sidst opdateret:** 2026-03-17
 **Del af:** ~/.claude/ global configuration system
