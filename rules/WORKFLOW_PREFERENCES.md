@@ -49,6 +49,16 @@ Superpowers skills skal bruges proaktivt.
 | Tests | `test-driven-development` | ALTID ved nye features |
 | Feature branch færdig | `finishing-a-development-branch` | Ved completion |
 | Code review modtaget | `receiving-code-review` | Før ændringer |
+| **Før commit** | **`/simplify`** | **ALTID før git commit** |
+
+### Pre-Commit: /simplify (Obligatorisk)
+
+`/simplify` SKAL køres før enhver commit. Den reviewer ændret kode for:
+- Code reuse (duplikeret funktionalitet)
+- Code quality (hacky patterns, leaky abstractions)
+- Efficiency (unødvendigt arbejde, memory issues)
+
+Eventuelle findings fixes inden commit udføres.
 
 ### Regel
 Hvis der er bare 1% chance for at en skill er relevant,
@@ -56,5 +66,5 @@ SKAL den invokeres via Skill tool.
 
 ---
 
-**Sidst opdateret:** 2026-02-27
+**Sidst opdateret:** 2026-03-20
 **Del af:** ~/.claude/ global configuration system
