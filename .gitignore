@@ -23,5 +23,18 @@ settings.json
 !README.md
 !.gitignore
 
+# Credentials and secrets
+.credentials.json
+
+# Cache and local state
+cache/
+stats-cache.json
+mcp-needs-auth-cache.json
+
+# Local backups and session data
+backups/
+plans/
+telemetry/
+
 # Exclude stray CLAUDE.md (projects have their own)
 CLAUDE.md
