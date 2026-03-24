@@ -1,19 +1,23 @@
 #!/bin/bash
 
-# Custom statusLine for SPCify development
-# Shows: Directory | Git Branch | Model | Cost
+# Custom statusLine for Claude Code
+# Shows: Directory | Git Branch | Context remaining %
 
 # Read JSON input from stdin
 input=$(cat)
 
-# Get current directory (relative to home)
-DIR=$(pwd | sed "s|^$HOME|~|")
+# Get current working directory (relative to home, shortened)
+DIR=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // ""')
+if [ -z "$DIR" ]; then
+    DIR=$(pwd)
+fi
+DIR=$(echo "$DIR" | sed "s|^$HOME|~|")
 
 # Get git branch if in a git repo
-if git rev-parse --git-dir > /dev/null 2>&1; then
-    BRANCH=$(git branch --show-current 2>/dev/null)
+if git -C "$(echo "$input" | jq -r '.workspace.current_dir // .cwd // "."')" rev-parse --git-dir > /dev/null 2>&1; then
+    BRANCH=$(git -C "$(echo "$input" | jq -r '.workspace.current_dir // .cwd // "."')" branch --show-current 2>/dev/null)
     if [ -n "$BRANCH" ]; then
-        GIT_INFO=" | 🌿 $BRANCH"
+        GIT_INFO=" | branch: $BRANCH"
     else
         GIT_INFO=""
     fi
@@ -21,12 +25,14 @@ else
     GIT_INFO=""
 fi
 
-# Extract model display name from JSON
-if command -v jq &> /dev/null; then
-    MODEL=$(echo "$input" | jq -r '.model.display_name // "Unknown"')
+# Extract remaining context percentage
+REMAINING=$(echo "$input" | jq -r '.context_window.remaining_percentage // empty')
+if [ -n "$REMAINING" ]; then
+    REMAINING_ROUNDED=$(printf "%.0f" "$REMAINING")
+    CONTEXT_INFO=" | context: ${REMAINING_ROUNDED}%"
 else
-    MODEL="Unknown (jq not installed)"
+    CONTEXT_INFO=""
 fi
 
 # Output format
-echo "📁 $DIR$GIT_INFO | 🤖 $MODEL"
+printf "%s%s%s" "$DIR" "$GIT_INFO" "$CONTEXT_INFO"

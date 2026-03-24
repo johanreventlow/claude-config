@@ -38,3 +38,9 @@ telemetry/
 
 # Exclude stray CLAUDE.md (projects have their own)
 CLAUDE.md
+
+# Claude Code internal directories
+.claude/
+paste-cache/
+sessions/
+tasks/
