@@ -9,7 +9,10 @@ Bootstrap-procedure som Claude følger når arbejde starter i et projekt.
 ### Trin 1: Identificer Projekttype
 
 Læs lokal `CLAUDE.md` → find `## Project Overview` → identificer type:
-- **Shiny** | **R Package** | **Quarto** | **Generic**
+- **Shiny** | **R Package** | **Quarto** | **Generic R** (default)
+- **TypeScript** | **Generic** (ikke-R)
+
+Hvis ingen `CLAUDE.md` findes eller ingen type er angivet: antag **Generic R**.
 
 ### Trin 1b: Detektér Platform
 
@@ -73,6 +76,49 @@ ALTID læs:
 Ved behov:
 - TROUBLESHOOTING_GUIDE.md
 - GEMINI_CLI_GUIDE.md
+```
+
+**🟨 TypeScript Project**
+```
+ALTID læs (auto-loaded globale regler bruges):
+- GIT_WORKFLOW.md
+- DEVELOPMENT_PHILOSOPHY.md
+- WORKFLOW_PREFERENCES.md
+- SECURITY_BEST_PRACTICES.md
+
+Ignorér R-specifikke globale regler:
+- R_STANDARDS.md
+- SHINY_STANDARDS.md
+- SHINY_ADVANCED_PATTERNS.md
+- QUARTO_STANDARDS.md
+- ARCHITECTURE_PATTERNS.md (R/Golem-specifik)
+- GEMINI_CLI_GUIDE.md (R-fokuseret)
+
+Følg TypeScript-konventioner:
+- ESLint/Prettier for formatering og linting
+- tsconfig.json for compiler-indstillinger
+- npm/pnpm for package management
+- Vitest/Jest for testing
+- Conventional Commits (samme format som R-projekter)
+```
+
+**⬜ Generic Project (ikke-R, ikke-TS)**
+```
+ALTID læs (auto-loaded globale regler bruges):
+- GIT_WORKFLOW.md
+- DEVELOPMENT_PHILOSOPHY.md
+- WORKFLOW_PREFERENCES.md
+- SECURITY_BEST_PRACTICES.md
+
+Ignorér R-specifikke globale regler:
+- R_STANDARDS.md
+- SHINY_STANDARDS.md
+- SHINY_ADVANCED_PATTERNS.md
+- QUARTO_STANDARDS.md
+- ARCHITECTURE_PATTERNS.md
+- GEMINI_CLI_GUIDE.md
+
+Følg projekt-specifik CLAUDE.md for sprogspecifikke konventioner.
 ```
 
 **📋 OpenSpec (Standard for alle projekter)**
@@ -139,6 +185,16 @@ Efter læsning:
 - Validér listings og cross-references
 - Check broken links
 
+**TypeScript:**
+- Kontroller ESLint/Prettier compliance
+- Enforc strict TypeScript (no `any` uden begrundelse)
+- Kontroller test coverage (Vitest/Jest)
+- Flag manglende type annotations på exports
+
+**Generic (ikke-R):**
+- Følg projektets egne conventions fra CLAUDE.md
+- Enforc generelle kvalitetsstandarder (TDD, logging, error handling)
+
 ---
 
 ## Checklist for Bootstrap
@@ -155,5 +211,5 @@ Efter læsning:
 
 ---
 
-**Sidst opdateret:** 2026-03-17
+**Sidst opdateret:** 2026-03-24
 **Del af:** ~/.claude/ global configuration system
