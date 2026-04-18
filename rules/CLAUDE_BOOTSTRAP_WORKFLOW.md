@@ -160,10 +160,10 @@ Efter læsning:
 - Push til remote uden anmodning
 - Ændre git config
 - Skrive filer uden godkendelse
-- **ALDRIG tilføj Claude attribution footers** til commits
-  - ❌ "🤖 Generated with Claude Code"
-  - ❌ "Co-Authored-By: Claude <noreply@anthropic.com>"
 - Push og merge uden eksplicit instruktion
+
+> For detaljerede git-regler (attribution footers, commit format, branches):
+> Se `GIT_WORKFLOW.md`.
 
 ### Ekstra Enforcement
 

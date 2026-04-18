@@ -143,11 +143,9 @@ dato <- as.Date(dato_string)
 
 ## Pre-Commit Checklist
 
-- [ ] Tests kørt og bestået
-- [ ] Kode formateret (`styler::style_file()`)
-- [ ] Linting uden fejl (`lintr::lint()`)
-- [ ] Dokumentation opdateret
-- [ ] Character encoding verificeret
+Se `DEVELOPMENT_PHILOSOPHY.md` → "Pre-Commit Checklist (Master)" for den
+komplette liste. R-specifik tilføjelse:
+- [ ] Character encoding verificeret (UTF-8)
 
 ---
 

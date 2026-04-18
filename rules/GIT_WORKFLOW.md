@@ -67,21 +67,17 @@ afgør default bump-størrelse (`feat:` → MINOR, `fix:` → PATCH, `BREAKING C
 
 ## Pre-Commit Checks
 
+**Automated:**
 ```bash
-# Automated
 testthat::test_dir('tests/testthat')
 lintr::lint_dir()
 styler::style_dir()
 devtools::check()  # For packages
-
-# Manual checklist
 ```
-- [ ] Kode kompilerer
-- [ ] Tests bestået
-- [ ] Dokumentation opdateret
-- [ ] NAMESPACE opdateret (hvis relevant)
-- [ ] Ingen debug statements
-- [ ] Ingen secrets
+
+**Manual checklist:** Se `DEVELOPMENT_PHILOSOPHY.md` → "Pre-Commit Checklist
+(Master)" for den komplette liste (tests, logging, error handling, performance,
+docs, formatering, linting, NAMESPACE, debug statements, secrets).
 
 ---
 

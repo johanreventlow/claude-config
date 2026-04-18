@@ -21,13 +21,8 @@ Avancerede mønstre og anti-patterns for Shiny applikationer.
 
 ## Hierarchical State Management
 
-```r
-app_state$events         # Event triggers (0L increments)
-app_state$data           # current_data, original_data, file_info, updating_table
-app_state$processing     # in_progress, completed, results, error
-app_state$ui             # current_selection, display_mode, pending_updates
-app_state$session        # auto_save_enabled, file_uploaded, user_started_session
-```
+Se `ARCHITECTURE_PATTERNS.md` → "State Management" for det fulde
+`app_state`-skema og event-driven handle-pattern.
 
 **Atomiske opdateringer:**
 ```r
@@ -137,18 +132,10 @@ CACHE_CONFIG <- list(
 
 ## Error Handling
 
-**safe_operation() helper:**
-```r
-safe_operation <- function(operation_name, code, fallback = NULL, session = NULL) {
-  tryCatch({
-    code
-  }, error = function(e) {
-    log_error("[ERROR_HANDLER]", paste(operation_name, "fejlede"),
-      details = list(error_message = e$message), session = session)
-    return(fallback)
-  })
-}
-```
+Se `DEVELOPMENT_PHILOSOPHY.md` for `safe_operation()`-implementation og
+defensive programming-principper. Brug samme helper i Shiny-kontekst
+— eksempler på atomiske opdateringer er i "Hierarchical State
+Management"-sektionen ovenfor.
 
 ---
 
