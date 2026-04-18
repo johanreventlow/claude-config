@@ -10,7 +10,6 @@
       "Bash(composer:*)",
       "Bash(fi)",
       "Bash(find:*)",
-      "Bash(gh:*)",
       "Bash(git:*)",
       "Bash(grep:*)",
       "Bash(kill:*)",
