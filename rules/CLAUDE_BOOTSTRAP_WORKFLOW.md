@@ -159,7 +159,6 @@ Efter læsning:
 - Merge til main/master uden eksplicit godkendelse
 - Push til remote uden anmodning
 - Ændre git config
-- Skrive filer uden godkendelse
 - Push og merge uden eksplicit instruktion
 
 > For detaljerede git-regler (attribution footers, commit format, branches):

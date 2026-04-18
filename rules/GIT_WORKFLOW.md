@@ -31,15 +31,11 @@ git checkout -b fix/bug-beskrivelse
    - ❌ "🤖 Generated with [Claude Code]"
    - ❌ "Co-Authored-By: Claude <noreply@anthropic.com>"
 
-⏸️ **STOP efter feature branch commit** - vent på instruktion:
-```bash
-git checkout -b fix/feature-name
-# ... arbejd og commit ...
-git commit -m "beskrivelse"
-# STOP HER - vent på instruktion
-```
+✅ **OK uden aftale (på feature branch):**
+- Flere commits i serie på samme feature branch indtil opgaven er logisk afsluttet
+- Rediger og skriv filer (Claude Codes system-prompt håndterer allerede "check med bruger før hard-to-reverse actions")
 
-✅ **OK uden aftale:**
+✅ **OK uden aftale (generelt):**
 - `git status`, `git diff`, `git log`
 - Lokale branches (ingen push/merge)
 
