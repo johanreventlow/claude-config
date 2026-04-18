@@ -51,7 +51,6 @@ ALTID læs:
 
 Ved behov:
 - TROUBLESHOOTING_GUIDE.md
-- GEMINI_CLI_GUIDE.md
 ```
 
 **📄 Quarto Website/Publication**
@@ -78,7 +77,6 @@ ALTID læs:
 
 Ved behov:
 - TROUBLESHOOTING_GUIDE.md
-- GEMINI_CLI_GUIDE.md
 ```
 
 **🟨 TypeScript Project**
@@ -95,7 +93,6 @@ Ignorér R-specifikke globale regler:
 - SHINY_ADVANCED_PATTERNS.md
 - QUARTO_STANDARDS.md
 - ARCHITECTURE_PATTERNS.md (R/Golem-specifik)
-- GEMINI_CLI_GUIDE.md (R-fokuseret)
 
 Følg TypeScript-konventioner:
 - ESLint/Prettier for formatering og linting
@@ -119,7 +116,6 @@ Ignorér R-specifikke globale regler:
 - SHINY_ADVANCED_PATTERNS.md
 - QUARTO_STANDARDS.md
 - ARCHITECTURE_PATTERNS.md
-- GEMINI_CLI_GUIDE.md
 
 Følg projekt-specifik CLAUDE.md for sprogspecifikke konventioner.
 ```

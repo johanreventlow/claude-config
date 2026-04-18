@@ -24,8 +24,7 @@ Centraliseret konfiguration for Claude Code på tværs af projekter og maskiner.
 │   ├── SECURITY_BEST_PRACTICES.md     # Sikkerhed
 │   ├── OBSERVABILITY_STANDARDS.md     # Logging/monitoring
 │   ├── CI_CD_WORKFLOW.md              # CI/CD
-│   ├── DEPLOYMENT_GUIDE.md            # Deployment
-│   └── GEMINI_CLI_GUIDE.md            # Gemini CLI til store kodebaser
+│   └── DEPLOYMENT_GUIDE.md            # Deployment
 │
 ├── agents/                   # Specialiserede review agents (15 filer)
 │   ├── tidyverse-code-reviewer.md
