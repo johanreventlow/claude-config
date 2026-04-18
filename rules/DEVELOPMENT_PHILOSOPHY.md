@@ -154,12 +154,12 @@ Dato: YYYY-MM-DD
 
 ## Breaking Changes Policy
 
-**Kræver:**
-- [ ] Major version bump (semver)
-- [ ] Deprecation warnings i minor version først
-- [ ] Migration guide i dokumentation
-- [ ] Eksplicitte commit message noter: `BREAKING CHANGE: ...`
-- [ ] Notification til stakeholders (hvis relevant)
+Breaking change-regler er nu konsolideret i `VERSIONING_POLICY.md` (§A semver,
+§C NEWS-template, §F pre-1.0/1.0-overgang). Se denne fil for:
+- Hvornår MAJOR vs MINOR (afhænger af pre-1.0 vs post-1.0)
+- Hvordan breaking changes dokumenteres i NEWS.md
+- Cross-repo bump-protokol når sibling-pakke bryder API
+- Pre-release checklist (inkl. eksplicitte `BREAKING CHANGE:`-commit-noter)
 
 ---
 

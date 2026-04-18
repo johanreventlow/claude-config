@@ -59,6 +59,10 @@ Længere forklaring (hvorfor, ikke hvordan).
 **Types:**
 `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`, `style`
 
+**Versionering:** For regler om version-bump, NEWS-format, git-tags og
+cross-repo bump-protokol — se `VERSIONING_POLICY.md`. Commit-prefixes
+afgør default bump-størrelse (`feat:` → MINOR, `fix:` → PATCH, `BREAKING CHANGE:` → MAJOR).
+
 ---
 
 ## Pre-Commit Checks
