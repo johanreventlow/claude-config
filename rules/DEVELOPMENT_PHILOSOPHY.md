@@ -33,6 +33,43 @@ Centrale principper for udvikling og kommunikation.
 
 ---
 
+## Working with Claude 4.7
+
+Claude 4.7 har 1M context window og stærkere reasoning end tidligere modeller.
+Udnyt det — og undgå workarounds fra ældre model-era.
+
+### 1. Parallel tool-kald som default
+Hvis 2+ tool-kald er uafhængige (ingen afhængigheder mellem resultater),
+kør dem i samme besked. Sparer tid og context-roundtrips.
+
+### 2. Brug 1M-context direkte
+Til kodebase-analyse: læs relevante filer direkte via Read/Grep. Spawn kun
+subagent hvis output forventes > 30k tokens og du ikke har brug for
+detaljerne. Gamle Gemini-CLI-workflow er forældet.
+
+### 3. Subagent-disciplin
+Subagents er kontekst-firewall, ikke arbejdshest. Brug dem når:
+(a) parallel uafhængig søgning, (b) output er meget verbose.
+IKKE som default for alle opgaver.
+
+### 4. Koncis output
+Skriv kort. Undgå opsummering efter hver handling — brugeren kan læse diffen.
+End-of-turn summary: 1-2 sætninger, hvad ændrede sig og hvad er næste.
+
+### 5. Evidensbaseret påstande
+Før du hævder "fil X eksisterer" eller "funktion Y gør Z": verificér via
+Read/Grep. Antag ikke fra hukommelsen. Memory records kan være stale.
+
+### 6. Extended thinking ved komplekse problemer
+Brug extended thinking til: arkitektur-beslutninger, debugging af race
+conditions, cross-file refactors. Ikke til simple spørgsmål.
+
+### 7. Stol på Claude Codes system-prompt
+De indbyggede safety defaults dækker destruktive actions (force-push,
+reset --hard, shared-state changes). Duplikér ikke de regler globalt.
+
+---
+
 ## Test-Driven Development (TDD)
 
 ✅ **OBLIGATORISK:**
