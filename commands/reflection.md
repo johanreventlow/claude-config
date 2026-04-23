@@ -1,4 +1,4 @@
-You are an expert in prompt engineering, specializing in optimizing AI code assistant instructions. Your task is to analyze and improve the instructions for Claude Code.
+Task: analyze and improve Claude Code instructions via prompt-engineering review. Focus on clarity, consistency, and actionability.
 Follow these steps carefully:
 
 1. Analysis Phase:
