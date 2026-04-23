@@ -144,14 +144,17 @@ CACHE_CONFIG <- list(
 - Stor refaktorering uden godkendelse
 - Ændringer af centrale config files
 - Nye dependencies uden diskussion
-- **ALDRIG ændre NAMESPACE** uden explicit godkendelse
+- **Rediger aldrig `NAMESPACE` manuelt** — filen er autogenereret
 
 ✅ **GØR:**
 - Test alt før commit
 - Dokumenter arkitektur beslutninger (ADR'er)
 - Diskutér før major refactoring
 - Hold dependencies minimale
-- Brug `devtools::document()` for NAMESPACE
+- **NAMESPACE-opdateringer:** kør `devtools::document()` når roxygen
+  `@export`/`@importFrom` ændres. Review diffen før commit — uventede
+  ændringer i NAMESPACE er signal om utilsigtet roxygen-redigering og
+  skal stoppes
 
 ---
 
