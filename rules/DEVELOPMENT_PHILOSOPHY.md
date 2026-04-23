@@ -6,10 +6,18 @@ Centrale principper for udvikling og kommunikation.
 
 ## Development Principles
 
-- **Quality > speed**: Robusthed først, TDD obligatorisk
-- **Observability**: Struktureret logging ikke valgfrit
-- **Test coverage**: ≥90% samlet, 100% kritiske paths
+- **Quality > speed**: Robusthed først. TDD er default for
+  adfærdsændrende kode; ikke påkrævet for docs, kommentarer,
+  formatering, CI-config eller rene refactors uden adfærdsændring.
+- **Observability**: Struktureret logging ikke valgfrit for kode der
+  rammer production-paths.
+- **Test coverage (risk-based)**: Testniveau matcher ændringens risiko.
+  Kritiske paths (data-load, state-sync, beregninger der driver UI)
+  skal have test-dækning. Ambitionsmål ≥90% samlet, men ikke blokerende
+  for små bugfixes, docs eller config. Rapportér eksplicit hvilke
+  tests du kørte, sprang over, og hvorfor.
 - **Breaking changes**: Major version bump + deprecation warnings først
+  (post-1.0). Pre-1.0 MINOR må indeholde breaking — markér tydeligt.
 - **User-focused**: Design for danske klinikere/brugere
 - **Continuous improvement**: ADR'er for arkitektoniske beslutninger
 
@@ -181,7 +189,7 @@ Dato: YYYY-MM-DD
 
 | Aspekt | Standard |
 |--------|----------|
-| Test coverage | ≥90% samlet, 100% kritiske paths |
+| Test coverage | Risk-based: kritiske paths dækkes; ambitionsmål ≥90% samlet; dokumentér skipped tests og hvorfor |
 | Performance | Startup <100ms (Shiny), render <1s |
 | Documentation | Roxygen2 for alle exports, ADR'er for arkitektur |
 | Logging | Struktureret, komponenter tagget, context-aware |
