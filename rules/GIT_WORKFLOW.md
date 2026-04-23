@@ -79,7 +79,11 @@ docs, formatering, linting, NAMESPACE, debug statements, secrets).
 
 ## Pull Request Process
 
-**Via GitHub CLI:**
+> ⚠️ **Windows:** `gh` CLI er IKKE installeret i managed-miljø. Se
+> `WINDOWS_ENVIRONMENT.md` for alternativer (`git push -u origin <branch>`
+> + manuel PR-oprettelse i browser).
+
+**Via GitHub CLI (macOS/Linux):**
 ```bash
 gh pr create \
   --title "Feat: Beskrivelse" \
@@ -90,6 +94,13 @@ gh pr create \
 ## Test plan
 - [x] Unit tests
 - [x] Manual test"
+```
+
+**Uden gh CLI (Windows eller anden begrænsning):**
+```bash
+git push -u origin feat/ny-feature
+# Åbn i browser: https://github.com/<owner>/<repo>/compare/feat/ny-feature
+# Udfyld PR-beskrivelse manuelt
 ```
 
 **PR checklist:**
