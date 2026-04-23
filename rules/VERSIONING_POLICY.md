@@ -137,12 +137,29 @@ En pakke kan bumpes til `1.0.0` når **alle** følgende holder:
 
 ## G. Repo-specifikke noter
 
-| Pakke | Aktuel version | Tag-historik | Bemærkning |
-|-------|----------------|--------------|------------|
-| `biSPCharts` | 0.2.0 | Blandet (`-dev`-suffix legacy) | Brug `vX.Y.Z` fremadrettet; `-dev`-tags bevares som historik |
-| `BFHcharts` | 0.7.2 | `vX.Y.Z` konsistent | Følger politik |
-| `BFHllm` | 0.1.1 | `vX.Y.Z` | Følger politik |
-| `BFHtheme` | 0.4.0 | Ingen tags før retroaktiv `v0.4.0` | Tag fremadrettet ved hver release |
+> ⚠️ **Versioner i denne tabel er eksempler og bliver hurtigt stale.**
+> Før du handler på versionsinfo: verificér mod `DESCRIPTION`, `git tag -l`,
+> eller GitHub-releases. Brug tabellen som orienteringspunkt, ikke
+> autoritativ fakta.
+
+| Pakke | Eksempel-version | Tag-historik | Bemærkning |
+|-------|------------------|--------------|------------|
+| `biSPCharts` | eksempel: 0.2.0 | Blandet (`-dev`-suffix legacy) | Brug `vX.Y.Z` fremadrettet; `-dev`-tags bevares som historik |
+| `BFHcharts` | eksempel: 0.7.2 | `vX.Y.Z` konsistent | Følger politik |
+| `BFHllm` | eksempel: 0.1.1 | `vX.Y.Z` | Følger politik |
+| `BFHtheme` | eksempel: 0.4.0 | Ingen tags før retroaktiv `v0.4.0` | Tag fremadrettet ved hver release |
+
+**Verifikationskommandoer:**
+```bash
+# Aktuel version i DESCRIPTION
+grep "^Version:" DESCRIPTION
+
+# Seneste release-tag
+git describe --tags --abbrev=0
+
+# Alle tags (nyeste først)
+git tag -l --sort=-v:refname | head -5
+```
 
 ---
 
