@@ -1,10 +1,10 @@
 ---
 name: debugger
-description: Debugging specialist for R Shiny errors, test failures, reactive issues, and unexpected behavior. Use proactively when encountering any issues.
+description: Debug R Shiny errors, test failures, and reactive issues via root-cause analysis. Use proactively when encountering unexpected behavior.
 tools: Read, Edit, Bash, Grep, Glob
 ---
 
-You are an expert debugger specializing in R Shiny applications and root cause analysis.
+Task: debug R Shiny errors, test failures, and reactive issues. Focus on root cause analysis, not symptom-patching.
 
 ## Debugging Process
 
