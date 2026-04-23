@@ -4,14 +4,15 @@ Brugerens foretrukne arbejdsmetoder og tools.
 
 ---
 
-## OpenSpec (Obligatorisk)
+## OpenSpec (Kontekstuel)
 
-OpenSpec er standard change management for ALLE projekter.
+OpenSpec er anbefalet change management når projektet allerede bruger
+det, eller når ændringen har behavioral/architectural impact.
 
-### Proaktiv Enforcement
+### Hvornår OpenSpec bruges
 
-✅ **Gør automatisk:**
-- Foreslå `openspec init` hvis openspec/ ikke findes i projektet
+✅ **Projekter med eksisterende `openspec/`:**
+- Følg projektets OpenSpec-workflow for non-trivielle ændringer
 - Foreslå `/openspec:proposal` ved:
   - Nye features/capabilities
   - Breaking changes til public API
@@ -20,12 +21,18 @@ OpenSpec er standard change management for ALLE projekter.
 - Brug `openspec list` og `openspec spec list` til at forstå kontekst
 - Link OpenSpec changes til GitHub Issues
 
+🆕 **Projekter uden `openspec/`:**
+- Foreslå `openspec init` **kun** ved større arkitektur/API-ændringer
+  eller hvis brugeren spørger om change management
+- Ikke påkrævet for små features eller ad-hoc projekter
+
 ❌ **Skip OpenSpec for:**
 - Bug fixes der genopretter existing behavior
 - Typos, formatering, kommentarer
 - Dependency updates (non-breaking)
 - Konfigurationsændringer
 - Tests for eksisterende behavior
+- One-shot scripts eller throwaway-kode
 
 ### Workflow
 1. **Proposal** → `/openspec:proposal` → godkendelse
@@ -34,13 +41,17 @@ OpenSpec er standard change management for ALLE projekter.
 
 ---
 
-## Superpowers Plugin (Kontekstuel)
+## Superpowers Plugin (Valgfri — tjek status)
 
-Superpowers skills er kraftfulde værktøjer — brug dem når de reelt matcher
-opgaven. Brug din vurdering baseret på opgavens karakter frem for at
-invokere "for sikkerheds skyld".
+> **Status:** Superpowers-plugin er p.t. deaktiveret i global settings
+> (`superpowers@claude-plugins-official: false`). Skills herunder
+> refereres kun hvis pluginet genaktiveres. Brug andre tilgængelige
+> skills/kommandoer som alternativ.
 
-### Kontekstuelle Skills
+Når pluginet er aktivt, er disse skills kraftfulde værktøjer — brug dem
+kun når de reelt matcher opgaven.
+
+### Kontekstuelle Skills (kun hvis plugin aktivt)
 
 | Situation | Skill | Hvornår |
 |-----------|-------|---------|
@@ -103,10 +114,22 @@ eskalér til Opus.
 
 ### Proaktiv foreslåelse
 
-Foreslå Sonnet-subagents til brugeren så ofte som det er relevant. Når der
-er 2+ uafhængige issues eller tasks på queue, default til at foreslå
-parallel Sonnet-dispatch — spar Opus-tid til review og orkestrering.
-Nævn eksplicit at Sonnet er valgt og hvorfor opgaven passer til profilen.
+Subagents er context-firewalls, ikke default-workhorse. Foreslå Sonnet-
+subagents **når opgaven faktisk matcher profilen** — ikke "for sikkerheds
+skyld". Konkrete triggers:
+
+- **2+ uafhængige tasks i kø** (parallel-dispatch giver reel speedup)
+- **Verbose output forventes** (>30k tokens læses/produceres) og detaljer
+  ikke skal ind i main-context
+- **Isoleret worktree-arbejde** hvor agents skal arbejde parallelt uden
+  at se hinandens uncommitted changes
+
+Undgå subagent for single-file edits, simple spørgsmål, eller opgaver
+hvor du alligevel skal læse outputtet detaljeret. Nævn eksplicit at
+Sonnet er valgt og hvorfor opgaven passer til profilen.
+
+**Returformat:** Subagent skal returnere koncise findings (10-20% af
+det de processer), ikke dumps af fuld output.
 
 ### Parallel arbejde: Brug worktrees
 
