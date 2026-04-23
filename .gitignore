@@ -35,6 +35,8 @@ mcp-needs-auth-cache.json
 backups/
 plans/
 telemetry/
+usage-data/
+
 
 # Exclude stray CLAUDE.md (projects have their own)
 CLAUDE.md

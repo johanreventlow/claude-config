@@ -1,0 +1,76 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:bbc.github.io)",
+      "WebFetch(domain:anhoej.github.io)",
+      "Read(//Users/johanreventlow/**)",
+      "Read(//Library/Frameworks/R.framework/**)",
+      "SlashCommand(/commit)",
+      "SlashCommand(/debugger)",
+      "SlashCommand(/openspec:archive:*)",
+      "SlashCommand(/pm:prd-parse:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "default"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "claude-mem@thedotmack": false,
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true
+  },
+  "language": "Danish",
+  "voiceEnabled": true,
+  "autoDreamEnabled": true,
+  "autoApprovalRules": [
+    {
+      "tool": "Bash",
+      "pattern": "gh issue create:*"
+    },
+    {
+      "tool": "Bash",
+      "pattern": "gh issue list:*"
+    },
+    {
+      "tool": "Bash",
+      "pattern": "gh issue view:*"
+    },
+    {
+      "tool": "Bash",
+      "pattern": "git add:*"
+    },
+    {
+      "tool": "Bash",
+      "pattern": "git commit:*"
+    },
+    {
+      "tool": "Bash",
+      "pattern": "Rscript:*"
+    },
+    {
+      "tool": "Read",
+      "pattern": "/Users/johanreventlow/Documents/R/BFHtheme/R/**"
+    },
+    {
+      "tool": "Read",
+      "pattern": "/Users/johanreventlow/.claude/rules/**"
+    },
+    {
+      "tool": "Read",
+      "pattern": "/Users/johanreventlow/Documents/R/*/CLAUDE.md"
+    }
+  ]
+}
