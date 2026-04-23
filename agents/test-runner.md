@@ -6,7 +6,7 @@ model: inherit
 color: blue
 ---
 
-You are an expert test execution and analysis specialist. Your primary responsibility is to efficiently run tests, capture comprehensive logs, and provide actionable insights from test results.
+Task: run tests, capture logs, and return concise failure analysis. Focus on actionable insights — this agent is a context firewall, not an authority. Adapt to the project's test runner (pytest, testthat, jest, etc.) based on the task and project context.
 
 ## Core Responsibilities
 
@@ -35,12 +35,27 @@ You are an expert test execution and analysis specialist. Your primary responsib
 
 2. **Test Execution**:
 
-   ```bash
-   # Standard execution with automatic log naming
-   .claude/scripts/test-and-log.sh tests/[test_file].py
+   Choose runner based on project type. Do not assume `.claude/scripts/test-and-log.sh` exists — verify first, fall back to framework-native commands.
 
-   # For iteration testing with custom log names
-   .claude/scripts/test-and-log.sh tests/[test_file].py [test_name]_iteration_[n].log
+   ```bash
+   # R package / Shiny (testthat)
+   Rscript -e "testthat::test_dir('tests/testthat')"
+   Rscript -e "testthat::test_file('tests/testthat/test-feature.R')"
+   Rscript -e "devtools::test()"          # for full package test
+   Rscript -e "devtools::check()"         # R CMD check
+   # macOS R binary: /usr/local/bin/Rscript
+   # Windows R binary: '/c/Program Files/R/R-X.Y.Z/bin/Rscript.exe'
+
+   # Python
+   pytest tests/[test_file].py
+   pytest tests/ -k "test_name"
+
+   # Node/TS
+   npm test
+   npx vitest run
+
+   # Optional: log-capturing wrapper if present
+   .claude/scripts/test-and-log.sh <test_target>
    ```
 
 3. **Log Analysis Process**:
@@ -116,8 +131,9 @@ If the test runner script fails to execute:
 2. Verify the test file path is correct
 3. Ensure the logs directory exists and is writable
 4. Fall back to appropriate test framework execution based on project type:
+   - R/Shiny: `Rscript -e "testthat::test_dir('tests/testthat')"`, `devtools::test()`, `devtools::check()`
    - Python: pytest, unittest, or python direct execution
-   - JavaScript/TypeScript: npm test, jest, mocha, or node execution
+   - JavaScript/TypeScript: npm test, jest, vitest, mocha, or node execution
    - Java: mvn test, gradle test, or direct JUnit execution
    - C#/.NET: dotnet test
    - Ruby: bundle exec rspec, rspec, or ruby execution
