@@ -109,7 +109,7 @@ git commit -m "feat(scope): beskrivelse"
 
 # Når bruger siger "push":
 git push -u origin feat/ny-feature
-# Henvis til: https://github.com/johanreventlow/BFHddl/compare/feat/ny-feature
+# Henvis til: https://github.com/<owner>/<repo>/compare/feat/ny-feature
 # for at oprette PR i browser
 ```
 
