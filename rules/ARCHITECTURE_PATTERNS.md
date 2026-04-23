@@ -88,12 +88,15 @@ transform_data <- function(data) {
 
 ## Configuration Management
 
-| Ansvar | File | Eksempler |
-|--------|------|-----------|
-| Branding | `config_branding.R` | Hospital navn, logo, farver |
-| Chart types | `config_chart_types.R` | SPC mappings |
-| Priorities | `config_observer_priorities.R` | Race prevention |
-| SPC | `config_spc_config.R` | Validation, colors |
+Typisk fil-fordeling for en Shiny/Golem-applikation. Navne er
+illustrative — tilpas til projektets domæne.
+
+| Ansvar | Fil (eksempel) | Indhold |
+|--------|----------------|---------|
+| Branding | `config_branding.R` | Navn, logo, farver, CSS-tokens |
+| Domæne-mappings | `config_<domain>_types.R` | DA→EN lookups, fx chart-types |
+| Observer-priorities | `config_observer_priorities.R` | Race prevention |
+| Domæne-config | `config_<domain>_config.R` | Validation, default-værdier |
 | UI | `config_ui.R` | Widths, heights, fonts |
 | System | `config_system_config.R` | Timeouts, debounce |
 | Environment | `inst/golem-config.yml` | Dev/prod/test |
@@ -101,11 +104,11 @@ transform_data <- function(data) {
 **Access pattern:**
 ```r
 # ✅ Funktioner som getters (validering + caching)
-get_hospital_branding <- function() { ... }
+get_branding <- function() { ... }
 get_chart_type <- function(type_name) { ... }
 
 # ❌ Direkte konstanter (kan ikke cache/validere)
-HOSPITAL_BRANDING$colors$primary
+BRANDING_CONFIG$colors$primary
 ```
 
 ---
