@@ -1,15 +1,15 @@
 # Shiny Development Standards
 
-Standarder for udvikling af R Shiny applikationer.
+Standarder R Shiny apps.
 
 ---
 
 ## Reactive Programming
 
 **Best practices:**
-- `req()` for input validation
-- `validate()` for brugervenlige fejlbeskeder
-- `isolate()` til at bryde reactive dependencies
+- `req()` input validation
+- `validate()` brugervenlige fejlbeskeder
+- `isolate()` bryd reactive dependencies
 - Undgå reactive pollution (unødvendige dependencies)
 
 **Observer patterns:**
@@ -66,30 +66,9 @@ my_module_server <- function(id, data) {
 
 ## State Management
 
-**Centralized state:**
-```r
-app_state <- reactiveValues(
-  data = NULL,
-  user_settings = list(),
-  session_info = NULL
-)
-
-# Brug konsistent gennem appen
-observeEvent(input$upload, {
-  app_state$data <- read_data(input$upload$datapath)
-})
-```
-
-**Undgå global mutable state:**
-```r
-# ❌ Farligt - delt mellem sessions
-global_counter <- 0
-
-# ✅ Session-specifik state
-session_state <- reactiveValues(counter = 0)
-```
-
-Se `SHINY_ADVANCED_PATTERNS.md` for: event architecture, race conditions, hierarchical state.
+Centraliseret `reactiveValues` (ej globale mutable variables — deles
+mellem sessions). Detaljer + hierarkisk struktur + event architecture +
+race conditions: se `SHINY_ADVANCED_PATTERNS.md`.
 
 ---
 
@@ -152,11 +131,11 @@ test_that("Upload functionality works", {
 ```
 
 **Manual checklist:**
-- [ ] Test med tomme inputs
-- [ ] Test med ugyldige inputs
+- [ ] Test tomme inputs
+- [ ] Test ugyldige inputs
 - [ ] Test reactive chains
 - [ ] Test session cleanup
-- [ ] Test på forskellige browsere
+- [ ] Test forskellige browsere
 
 ---
 
@@ -172,7 +151,7 @@ fluidRow(
 
 **Accessibility:**
 - Beskrivende labels
-- `aria-label` for skærmlæsere
+- `aria-label` skærmlæsere
 - Keyboard navigation
 - Passende farvekontrast
 
@@ -192,22 +171,8 @@ output$plot <- renderPlot({
 
 ## Security
 
-**Input sanitization:**
-```r
-safe_input <- reactive({
-  req(input$text)
-  stringr::str_replace_all(input$text, "[<>]", "")
-})
-```
-
-**File upload safety:**
-```r
-observeEvent(input$file, {
-  req(input$file)
-  ext <- tools::file_ext(input$file$name)
-  validate(need(ext %in% c("csv", "xlsx"), "Kun CSV og XLSX tilladt"))
-})
-```
+Input sanitization, file upload validation, XSS, SQL injection: se
+`SECURITY_BEST_PRACTICES.md` (auto-loaded Tier 1).
 
 ---
 

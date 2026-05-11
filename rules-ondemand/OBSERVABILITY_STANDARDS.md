@@ -1,6 +1,6 @@
 # Observability Standards
 
-Standarder for logging, monitoring og observability.
+Standarder logging, monitoring + observability.
 
 ---
 
@@ -12,7 +12,7 @@ Standarder for logging, monitoring og observability.
 | INFO | App flow | "App started", "User logged in" |
 | WARN | Ikke-kritiske issues | "API slow (>2s)", "Cache miss" |
 | ERROR | Kræver attention | "DB connection failed" |
-| FATAL | App kan ikke fortsætte | "Out of memory" |
+| FATAL | App kan ej fortsætte | "Out of memory" |
 
 ---
 

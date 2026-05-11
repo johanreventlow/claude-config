@@ -1,12 +1,12 @@
 # Windows Environment Configuration
 
-Platform-specifikke indstillinger for Windows-maskiner (Region Hovedstaden).
+Platform-specifikke indstillinger Windows-maskiner (Region Hovedstaden).
 
 ---
 
 ## R Installation
 
-R er installeret i `C:\Program Files\R\` men er **IKKE i PATH**.
+R installeret i `C:\Program Files\R\` men **IKKE i PATH**.
 
 **Tilgængelige versioner:**
 - `C:\Program Files\R\R-4.5.2\` (nyeste)
@@ -14,7 +14,7 @@ R er installeret i `C:\Program Files\R\` men er **IKKE i PATH**.
 - `C:\Program Files\R\R-4.4.2\`
 - `C:\Program Files\R\R-4.4.1\`
 
-**Brug altid fuld sti til R og Rscript:**
+**Brug altid fuld sti til R + Rscript:**
 ```bash
 # Korrekt (bash i VSCode terminal / Git Bash)
 '/c/Program Files/R/R-4.5.2/bin/Rscript.exe' -e "devtools::test()"
@@ -24,18 +24,18 @@ R er installeret i `C:\Program Files\R\` men er **IKKE i PATH**.
 "/c/Program Files/R/R-4.5.2/bin/Rscript.exe"
 ```
 
-**ALDRIG** kald bare `R` eller `Rscript` — de er ikke i PATH og vil fejle.
+**ALDRIG** kald bare `R` el. `Rscript` — ej i PATH, fejler.
 
 ---
 
 ## GitHub uden gh CLI
 
-`gh` CLI er **IKKE installeret** og kan ikke installeres (managed Windows-miljø).
+`gh` CLI **IKKE installeret** + kan ej installeres (managed Windows-miljø).
 
 **Git authentication:**
-- Git er installeret: `C:\Program Files\Git\cmd\git.exe`
+- Git installeret: `C:\Program Files\Git\cmd\git.exe`
 - Credential helper: `manager` (Git Credential Manager)
-- GitHub auth fungerer via HTTPS + credential manager
+- GitHub auth via HTTPS + credential manager
 - Bruger: `johanreventlow` / `johanreventlow@users.noreply.github.com`
 
 **Alternativer til gh CLI:**
@@ -56,16 +56,16 @@ git remote -v
 git push -u origin <branch-name>
 ```
 
-**VIGTIGT:** Foreslå ALDRIG `gh` kommandoer på Windows. Brug `git` kommandoer eller henvis til GitHub web interface i stedet.
+**VIGTIGT:** Foreslå ALDRIG `gh` kommandoer på Windows. Brug `git` el. henvis til GitHub web interface.
 
 ---
 
 ## Shell Environment
 
-Claude Code i VSCode bruger **Git Bash** (mingw64) som shell:
-- Unix-stil stier: `/c/Users/...` (ikke `C:\Users\...`)
+Claude Code i VSCode bruger **Git Bash** (mingw64) shell:
+- Unix-stil stier: `/c/Users/...` (ej `C:\Users\...`)
 - Unix-kommandoer: `ls`, `cat`, `grep` etc. virker
-- Windows-programmer kræver `.exe` suffix og fuld sti hvis ikke i PATH
+- Windows-programmer kræver `.exe` suffix + fuld sti hvis ej i PATH
 
 **PATH indeholder:**
 - `/mingw64/bin`, `/usr/bin` (Git Bash builtins)

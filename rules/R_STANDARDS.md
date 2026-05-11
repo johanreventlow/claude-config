@@ -1,6 +1,6 @@
 # R Development Standards
 
-Generelle standarder for R-udvikling på tværs af alle projekter.
+R-udvikling standarder på tværs projekter.
 
 ---
 
@@ -12,14 +12,14 @@ Generelle standarder for R-udvikling på tværs af alle projekter.
 - Konstanter: `UPPER_CASE`
 
 **Sprog:**
-- Kommentarer: Dansk
-- Kode: Engelsk (funktionsnavne, variabelnavne)
-- Dokumentation: Dansk når målgruppen er dansk
+- Kommentarer: dansk
+- Kode: engelsk (funktions/variabelnavne)
+- Dokumentation: dansk når målgruppe dansk
 
 **Character Encoding:**
 - **Altid** `encoding = 'UTF-8'` ved sourcing
 - Database: `encoding = "UTF8"`
-- Danske karakterer (æ, ø, å) skal håndteres korrekt
+- Danske karakterer (æ, ø, å) håndteres korrekt
 
 ---
 
@@ -27,15 +27,15 @@ Generelle standarder for R-udvikling på tværs af alle projekter.
 
 **Foretrukne pakker:**
 - `dplyr` > base subsetting
-- `tidyr` for reshaping
+- `tidyr` reshaping
 - `purrr` > `apply` familie
-- `readr` for import
-- `stringr` for strings
+- `readr` import
+- `stringr` strings
 
 **Pipe:**
-- Brug `|>` eller `%>%` konsistent
+- `|>` eller `%>%` konsistent
 - Max 5-7 steps per chain
-- Break længere chains med mellemresultater
+- Bryd længere chains med mellemresultater
 
 ---
 
@@ -66,12 +66,12 @@ Se `DEVELOPMENT_PHILOSOPHY.md` for `safe_operation()` implementation.
 
 **TDD approach:**
 1. Skriv tests først
-2. Implementer minimal kode til at bestå test
+2. Minimal kode bestå test
 3. Refactor med test-sikkerhed
 4. Kør tests kontinuerligt
 
 **Framework:**
-- `testthat` som standard
+- `testthat` standard
 - Organiser i `tests/testthat/`
 - Navngivning: `test-{feature}.R`
 
@@ -86,12 +86,12 @@ testthat::test_file('tests/testthat/test-feature.R')
 ## Dependencies
 
 **Package management:**
-- `renv` for reproducibility
-- Lock med `renv::snapshot()`
-- Dokumenter i `DESCRIPTION` eller README
+- `renv` reproducibility
+- Lock: `renv::snapshot()`
+- Dokumentér i `DESCRIPTION` eller README
 
 **Namespace:**
-- Prefer `pkg::fun()` (eksplicit namespace)
+- Foretræk `pkg::fun()` (eksplicit namespace)
 - Undgå `library()` i funktioner (kun scripts)
 
 ---
@@ -99,9 +99,9 @@ testthat::test_file('tests/testthat/test-feature.R')
 ## Performance
 
 **Vectorization:**
-- Brug vektoriserede operationer > loops
-- `purrr::map()` for functional programming
-- Undgå `for`-loops for simple transformationer
+- Vektoriserede operationer > loops
+- `purrr::map()` functional programming
+- Undgå `for`-loops til simple transformationer
 
 **Memory:**
 ```r
@@ -123,12 +123,12 @@ for (item in input) {
 ## Documentation
 
 **Roxygen2:**
-- Brug `#'` for roxygen kommentarer
-- Dokumenter `@param`, `@return`, `@examples`
+- `#'` roxygen kommentarer
+- Dokumentér `@param`, `@return`, `@examples`
 - Kør `devtools::document()` efter ændringer
 
 **Inline comments:**
-Forklarer "hvorfor", ikke "hvad":
+Forklar "hvorfor", ikke "hvad":
 ```r
 # ✅ God kommentar
 # Konverter til date for at håndtere forskellige input formater
@@ -143,18 +143,8 @@ dato <- as.Date(dato_string)
 
 ## Pre-Commit Checklist
 
-Se `DEVELOPMENT_PHILOSOPHY.md` → "Pre-Commit Checklist (Master)" for den
-komplette liste. R-specifik tilføjelse:
+Se `DEVELOPMENT_PHILOSOPHY.md` → "Pre-Commit Checklist (Master)" for komplet liste. R-specifik tilføjelse:
 - [ ] Character encoding verificeret (UTF-8)
-
----
-
-## Code Review Fokus
-
-- **Correctness**: Logik, edge cases, type safety
-- **Readability**: Selvforklarende kode, passende kommentarer
-- **Maintainability**: DRY principle, single responsibility
-- **Performance**: Vektorisering, memory efficiency
 
 ---
 

@@ -1,213 +1,121 @@
 # Claude Bootstrap Workflow
 
-Bootstrap-procedure som Claude følger når arbejde starter i et projekt.
+Bootstrap-procedure ved projekt-start. Auto-loadet via global CLAUDE.md.
 
 ---
 
-## Bootstrap Procedure
+## Tier-system
 
-### Trin 1: Identificer Projekttype
+Globale rules organiseret i tre tiers efter relevans-bredde:
 
-Læs lokal `CLAUDE.md` → find `## Project Overview` → identificer type:
-- **Shiny** | **R Package** | **Quarto** | **Generic R** (default)
-- **TypeScript** | **Generic** (ikke-R)
+### Tier 1: Auto-load (`~/.claude/rules/*.md`)
+Universelle for alle R-projekter. Ladet automatisk hver session.
 
-Hvis ingen `CLAUDE.md` findes eller ingen type er angivet: antag **Generic R**.
+- `CLAUDE_BOOTSTRAP_WORKFLOW.md` — denne fil
+- `WORKFLOW_PREFERENCES.md` — OpenSpec, subagent-orkestrering, worktrees
+- `DEVELOPMENT_PHILOSOPHY.md` — TDD, ADR, safe_operation, design principles
+- `R_STANDARDS.md` — naming, tidyverse, error handling, testing
+- `GIT_WORKFLOW.md` — branches, commits, PRs
+- `VERSIONING_POLICY.md` — semver, tags, NEWS, cross-repo bump
+- `SECURITY_BEST_PRACTICES.md` — secrets, input validation, auth
 
-### Trin 1b: Detektér Platform
+### Tier 2: Profil-rules (`~/.claude/rules-profiles/<type>/*.md`)
+Project-type-specifikke. Project CLAUDE.md @-importerer relevant profil.
 
-Hvis platform er **Windows** (win32):
-- Læs `WINDOWS_ENVIRONMENT.md` — indeholder R-stier, GitHub-workaround (ingen gh CLI), og shell-detaljer
-- Brug altid fuld sti til R/Rscript (ikke i PATH)
-- Brug aldrig `gh` kommandoer — brug `git` + browser i stedet
+- `shiny/` — SHINY_STANDARDS, SHINY_ADVANCED_PATTERNS, ARCHITECTURE_PATTERNS
 
-### Trin 2: Læs Globale Standarder
+### Tier 3: On-demand (`~/.claude/rules-ondemand/*.md`)
+Sjældent-relevante. Manuel @-import når aktivt brug.
 
-**🟦 Shiny Application**
-```
-ALTID læs:
-- R_STANDARDS.md
-- SHINY_STANDARDS.md
-- SHINY_ADVANCED_PATTERNS.md
-- GIT_WORKFLOW.md
-- VERSIONING_POLICY.md
-- DEVELOPMENT_PHILOSOPHY.md
-- WORKFLOW_PREFERENCES.md
-
-Ved behov:
-- ARCHITECTURE_PATTERNS.md
-- TROUBLESHOOTING_GUIDE.md
-```
-
-**📦 R Package**
-```
-ALTID læs:
-- R_STANDARDS.md
-- ARCHITECTURE_PATTERNS.md
-- GIT_WORKFLOW.md
-- VERSIONING_POLICY.md
-- DEVELOPMENT_PHILOSOPHY.md
-- WORKFLOW_PREFERENCES.md
-
-Ved behov:
-- TROUBLESHOOTING_GUIDE.md
-```
-
-**📄 Quarto Website/Publication**
-```
-ALTID læs:
-- QUARTO_STANDARDS.md
-- GIT_WORKFLOW.md
-- DEVELOPMENT_PHILOSOPHY.md
-- WORKFLOW_PREFERENCES.md
-
-Ved behov:
-- TROUBLESHOOTING_GUIDE.md
-```
-
-**🔧 Generic R Project**
-```
-ALTID læs:
-- R_STANDARDS.md
-- ARCHITECTURE_PATTERNS.md
-- GIT_WORKFLOW.md
-- VERSIONING_POLICY.md
-- DEVELOPMENT_PHILOSOPHY.md
-- WORKFLOW_PREFERENCES.md
-
-Ved behov:
-- TROUBLESHOOTING_GUIDE.md
-```
-
-**🟨 TypeScript Project**
-```
-ALTID læs (auto-loaded globale regler bruges):
-- GIT_WORKFLOW.md
-- DEVELOPMENT_PHILOSOPHY.md
-- WORKFLOW_PREFERENCES.md
-- SECURITY_BEST_PRACTICES.md
-
-Ignorér R-specifikke globale regler:
-- R_STANDARDS.md
-- SHINY_STANDARDS.md
-- SHINY_ADVANCED_PATTERNS.md
-- QUARTO_STANDARDS.md
-- ARCHITECTURE_PATTERNS.md (R/Golem-specifik)
-
-Følg TypeScript-konventioner:
-- ESLint/Prettier for formatering og linting
-- tsconfig.json for compiler-indstillinger
-- npm/pnpm for package management
-- Vitest/Jest for testing
-- Conventional Commits (samme format som R-projekter)
-```
-
-**⬜ Generic Project (ikke-R, ikke-TS)**
-```
-ALTID læs (auto-loaded globale regler bruges):
-- GIT_WORKFLOW.md
-- DEVELOPMENT_PHILOSOPHY.md
-- WORKFLOW_PREFERENCES.md
-- SECURITY_BEST_PRACTICES.md
-
-Ignorér R-specifikke globale regler:
-- R_STANDARDS.md
-- SHINY_STANDARDS.md
-- SHINY_ADVANCED_PATTERNS.md
-- QUARTO_STANDARDS.md
-- ARCHITECTURE_PATTERNS.md
-
-Følg projekt-specifik CLAUDE.md for sprogspecifikke konventioner.
-```
-
-**📋 OpenSpec (Standard for alle projekter)**
-```
-OpenSpec Integration:
-- Hvis openspec/ ikke findes: Foreslå `openspec init`
-- Hvis openspec/ findes: Læs openspec/project.md og openspec/AGENTS.md
-- Brug OpenSpec workflow for alle non-trivielle ændringer
-
-Fordele:
-- Detaljeret projekt-specifik dokumentation
-- Struktureret change management
-- Single source of truth for konventioner
-```
-
-### Trin 3: Anvend Standarderne
-
-Efter læsning:
-1. Enforc regler ved code review
-2. Foreslå struktur baseret på best practices
-3. Foreslå git workflow
-4. Flag afvigelser fra standarderne
+- `TROUBLESHOOTING_GUIDE.md` — kompleks debugging
+- `CI_CD_WORKFLOW.md` — GitHub Actions
+- `DEPLOYMENT_GUIDE.md` — RConnect, Docker, shinyapps
+- `OBSERVABILITY_STANDARDS.md` — production logging, Sentry, alerts
+- `QUARTO_STANDARDS.md` — Quarto websites/dokumenter
+- `WINDOWS_ENVIRONMENT.md` — Windows R-paths, gh CLI workaround
 
 ---
 
-## Enforcement Rules
+## Bootstrap-procedure
 
-### For Alle Projekttyper
+### Trin 1: Identificér projekttype
 
-✅ **Gør automatisk:**
-- Læs lokale CLAUDE.md + relevante globale filer
-- Foreslå git branches
-- Enforc commit message format
-- Flag manglende tests
-- Kontroller pre-commit checklist
+Læs lokal `CLAUDE.md` → `## Project Overview` → identificér type:
+**Shiny** | **R Package** | **Quarto** | **Generic R** (default)
 
-❌ **Gør IKKE - OBLIGATORISKE REGLER:**
-- Commit direkte til main/master
-- Merge til main/master uden eksplicit godkendelse
-- Push til remote uden anmodning
-- Ændre git config
-- Push og merge uden eksplicit instruktion
+Ingen `CLAUDE.md` eller type: antag **Generic R**.
 
-> For detaljerede git-regler (attribution footers, commit format, branches):
-> Se `GIT_WORKFLOW.md`.
+### Trin 1b: Platform-detektion
 
-### Ekstra Enforcement
+Windows (win32):
+- Manuel kopi `~/.claude/rules-ondemand/WINDOWS_ENVIRONMENT.md` →
+  `~/.claude/rules/` for auto-load på Windows-maskinen
+- ALDRIG `gh` CLI — brug `git` + browser
+- Altid fuld sti til R/Rscript (ej i PATH)
 
-**Shiny Apps:**
-- Kontroller reactive patterns
-- Flag potential reactive storms
-- Foreslå reactive prioritization
-- Check error handling
+### Trin 2: Project @-imports (Tier 2)
 
-**R Packages:**
-- Kontroller `devtools::check()` status
-- Enforc documentation requirements
-- Kontroller test coverage
-- Flag NAMESPACE manual edits
+Project CLAUDE.md tilføjer @-imports for projekt-type-rules:
+
+**Shiny:**
+```
+@~/.claude/rules-profiles/shiny/SHINY_STANDARDS.md
+@~/.claude/rules-profiles/shiny/SHINY_ADVANCED_PATTERNS.md
+@~/.claude/rules-profiles/shiny/ARCHITECTURE_PATTERNS.md
+```
+
+**R Package:** Tier 1 dækker. Ingen ekstra @-imports default.
 
 **Quarto:**
-- Kontroller render output
-- Validér listings og cross-references
-- Check broken links
+```
+@~/.claude/rules-ondemand/QUARTO_STANDARDS.md
+```
 
-**TypeScript:**
-- Kontroller ESLint/Prettier compliance
-- Enforc strict TypeScript (no `any` uden begrundelse)
-- Kontroller test coverage (Vitest/Jest)
-- Flag manglende type annotations på exports
+### Trin 3: On-demand-imports
 
-**Generic (ikke-R):**
-- Følg projektets egne conventions fra CLAUDE.md
-- Enforc generelle kvalitetsstandarder (TDD, logging, error handling)
+Project CLAUDE.md @-importerer Tier 3 hvis aktivt arbejdet med:
+
+```
+@~/.claude/rules-ondemand/OBSERVABILITY_STANDARDS.md  # production logging
+@~/.claude/rules-ondemand/DEPLOYMENT_GUIDE.md         # ved deploy-arbejde
+```
+
+### Trin 4: OpenSpec
+
+`openspec/` findes: læs `openspec/project.md` + `openspec/AGENTS.md`,
+brug OpenSpec workflow til non-trivielle ændringer.
+
+`openspec/` findes ej: foreslå `openspec init` kun ved større
+arkitektur-ændringer.
 
 ---
 
-## Checklist for Bootstrap
+## Enforcement
+
+✅ **Automatisk:**
+- Læs lokal CLAUDE.md + Tier 1 + project @-imports
+- Foreslå git branches via konvention (`feat/`, `fix/`, etc.)
+- Enforc commit message format
+- Flag manglende tests
+
+❌ **Aldrig uden eksplicit godkendelse:**
+- Commit/merge til `main`/`master`
+- Push til remote
+- Force push, branch deletion, release-tagging
+
+Detaljer: `GIT_WORKFLOW.md`.
+
+---
+
+## Checklist
 
 - [ ] Læst lokal CLAUDE.md
 - [ ] Identificeret projekttype
-- [ ] Detekteret platform (Windows → læs WINDOWS_ENVIRONMENT.md)
-- [ ] Læst alle relevante globale rules
-- [ ] OpenSpec: Initialiseret eller læst eksisterende
-- [ ] Workflow preferences: Læst og klar til enforcement
-- [ ] Forstået projekt-specifik guidance
-- [ ] Klar til at enforce standarder
-- [ ] Kan foreslå struktur+workflow
+- [ ] Platform-detekteret (Windows → kopi WINDOWS_ENVIRONMENT)
+- [ ] Tier 2 @-imports verificeret i project CLAUDE.md
+- [ ] OpenSpec status tjekket
 
 ---
 
-**Sidst opdateret:** 2026-03-24
+**Sidst opdateret:** 2026-04-28
 **Del af:** ~/.claude/ global configuration system

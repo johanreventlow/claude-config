@@ -1,6 +1,6 @@
 # Versioning Policy
 
-Standard for versionering, NEWS-format, git-tags og cross-repo bump-protokol
+Standard versionering, NEWS-format, git-tags + cross-repo bump-protokol
 i BFH-økosystemet (biSPCharts, BFHcharts, BFHllm, BFHtheme).
 
 ---
@@ -15,7 +15,7 @@ i BFH-økosystemet (biSPCharts, BFHcharts, BFHllm, BFHtheme).
 
 **Pre-1.0 (alle nuværende pakker):**
 - MINOR-bumps **må** indeholde breaking changes — markeres tydeligt med `## Breaking changes` i NEWS
-- MAJOR (`1.0.0`) reserveres til "produktion-klar" — se §F
+- MAJOR (`1.0.0`) reserveres "produktion-klar" — se §F
 
 **Bump-størrelse fra commit-prefixes** (jf. Conventional Commits i `GIT_WORKFLOW.md`):
 
@@ -23,7 +23,7 @@ i BFH-økosystemet (biSPCharts, BFHcharts, BFHllm, BFHtheme).
 |--------|--------------|
 | `feat:` | MINOR |
 | `fix:` | PATCH |
-| `refactor:` / `perf:` / `chore:` / `docs:` / `test:` / `style:` | PATCH (eller ingen bump hvis intern) |
+| `refactor:` / `perf:` / `chore:` / `docs:` / `test:` / `style:` | PATCH (eller intet bump hvis intern) |
 | `BREAKING CHANGE:` i body | MAJOR (post-1.0) eller MINOR (pre-1.0, markér tydeligt) |
 
 ---
@@ -34,19 +34,19 @@ i BFH-økosystemet (biSPCharts, BFHcharts, BFHllm, BFHtheme).
 
 **Regler:**
 - Tag oprettes **efter** merge til `main`/`master`, peger på merge-commit
-- Annoteret tag (ikke lightweight): `git tag -a v0.7.2 -m "Release v0.7.2"`
+- Annoteret tag (ej lightweight): `git tag -a v0.7.2 -m "Release v0.7.2"`
 - Push tag eksplicit: `git push origin v0.7.2`
-- Ingen `-dev`-suffix til releases (kun til ad hoc snapshots, hvis nødvendigt)
+- Ingen `-dev`-suffix til releases (kun ad hoc snapshots, hvis nødvendigt)
 
 **Ekstraordinære tags accepteres:**
 - `v0.7.2-rc1` (release candidate, kort levetid)
-- `v0.7.2-hotfix.1` (kun hvis hovedlinjen er blokeret)
+- `v0.7.2-hotfix.1` (kun hvis hovedlinje blokeret)
 
 ---
 
 ## C. NEWS.md template
 
-**Sprog:** Dansk (matcher commits og UI-tekst).
+**Sprog:** Dansk (matcher commits + UI-tekst).
 
 **Format** (top = nyeste version):
 
@@ -71,10 +71,10 @@ i BFH-økosystemet (biSPCharts, BFHcharts, BFHllm, BFHtheme).
 ```
 
 **Regler:**
-- Kun de sektioner der har indhold inkluderes (drop tomme `## Bug fixes` osv.)
-- Hver bullet beskriver **hvad + hvorfor** — ikke "hvordan" (kode-detaljer)
+- Kun sektioner med indhold inkluderes (drop tomme `## Bug fixes` osv.)
+- Hver bullet beskriver **hvad + hvorfor** — ej "hvordan" (kode-detaljer)
 - Reference issues/PRs som `(#123)` ved slutning af bullet
-- `(development)`-entries tillades øverst mellem releases — fjernes/omdøbes ved bump
+- `(development)`-entries tilladt øverst mellem releases — fjernes/omdøbes ved bump
 
 ---
 
@@ -101,7 +101,7 @@ Køres før hvert tag/push. Alle punkter SKAL bekræftes — ingen genveje.
 
 **Når sibling-pakke bumper, skal downstream opdatere lower-bound:**
 
-1. **Sibling-pakke** (fx BFHcharts) bumper og tagger `vX.Y.Z`
+1. **Sibling-pakke** (fx BFHcharts) bumper + tagger `vX.Y.Z`
 2. **Downstream** (fx biSPCharts) opretter separat PR:
    - Fil: `DESCRIPTION` → `BFHcharts (>= NEW_VERSION)`
    - Commit: `chore(deps): bump BFHcharts to X.Y.Z`
@@ -111,23 +111,23 @@ Køres før hvert tag/push. Alle punkter SKAL bekræftes — ingen genveje.
      `* **Breaking change i BFHcharts X.0.0:** denne version bruger nyt API for Y. Se BFHcharts NEWS for detaljer.`
 
 **Lower-bound `>=` betyder:**
-- Downstream tester mod NEW_VERSION+ (ikke ældre)
+- Downstream tester mod NEW_VERSION+ (ej ældre)
 - Ingen øvre grænse → øvre versioner antages bagudkompatible
 - Ved breakage opdaget i sibling MAJOR-bump: bump downstream lower-bound for at "skip" inkompatibel version + tilpas kalder-kode
 
-**Ingen `Remotes:` SHA-pinning** — strider mod manuel-flow og minder om renv-friktion.
+**Ingen `Remotes:` SHA-pinning** — strider mod manuel-flow + minder om renv-friktion.
 
 ---
 
 ## F. Pre-1.0 → 1.0-kriterier
 
-En pakke kan bumpes til `1.0.0` når **alle** følgende holder:
+Pakke kan bumpes til `1.0.0` når **alle** følgende holder:
 
 - [ ] Public API stabil i ≥ 3 måneder uden breaking changes
 - [ ] ≥ 90 % test-coverage på eksporterede funktioner
 - [ ] Alle exports har komplet roxygen-dokumentation + `@examples`
-- [ ] Pakken bruges aktivt i produktion (ikke kun udvikling)
-- [ ] Breaking change policy kan håndhæves uden at forsinke release-cadence
+- [ ] Pakken bruges aktivt i produktion (ej kun udvikling)
+- [ ] Breaking change policy kan håndhæves uden forsinket release-cadence
 
 **Konsekvens af 1.0:**
 - Breaking changes kræver MAJOR bump (`2.0.0`)
@@ -137,9 +137,9 @@ En pakke kan bumpes til `1.0.0` når **alle** følgende holder:
 
 ## G. Repo-specifikke noter
 
-> ⚠️ **Versioner i denne tabel er eksempler og bliver hurtigt stale.**
-> Før du handler på versionsinfo: verificér mod `DESCRIPTION`, `git tag -l`,
-> eller GitHub-releases. Brug tabellen som orienteringspunkt, ikke
+> ⚠️ **Versioner i tabel er eksempler + bliver hurtigt stale.**
+> Før handling på versionsinfo: verificér mod `DESCRIPTION`, `git tag -l`,
+> eller GitHub-releases. Brug tabel som orienteringspunkt, ej
 > autoritativ fakta.
 
 | Pakke | Eksempel-version | Tag-historik | Bemærkning |

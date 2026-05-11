@@ -1,6 +1,6 @@
 # Security Best Practices
 
-Security standards for sikker R- og Shiny-udvikling.
+Security standards sikker R- + Shiny-udvikling.
 
 ---
 
@@ -17,7 +17,7 @@ api_key <- Sys.getenv("API_KEY")
 ```
 
 **Lokal udvikling:**
-- `.Renviron` for secrets (git ignored)
+- `.Renviron` secrets (git ignored)
 - `.Renviron.example` committed (placeholders)
 
 **Production:**
@@ -179,7 +179,7 @@ decrypted <- rawToChar(simple_decrypt(encrypted, key))
 
 ## Security Checklist
 
-- [ ] Secrets i env vars (ikke kode)
+- [ ] Secrets i env vars (ej kode)
 - [ ] `.Renviron`/`.env` i `.gitignore`
 - [ ] Input validated
 - [ ] SQL parameterized
@@ -207,7 +207,7 @@ decrypted <- rawToChar(simple_decrypt(encrypted, key))
 2. **Dokumentér** (logs, timeline)
 3. **Notify** security team
 4. **Patch** sårbarhed
-5. **Audit** for lignende issues
+5. **Audit** lignende issues
 6. **Post-mortem**
 
 ---

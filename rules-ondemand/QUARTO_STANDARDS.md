@@ -1,6 +1,6 @@
 # Quarto Development Standards
 
-Standarder for udvikling af Quarto websites og dokumenter.
+Standarder Quarto websites + dokumenter.
 
 ---
 

@@ -1,6 +1,8 @@
-# Architecture Patterns & Design Principles
+# Architecture Patterns (Shiny/Golem)
 
-Arkitektoniske mønstre og design principper for R-projekter.
+Golem-specifikke arkitektur-mønstre. Universelle design-principles
+(Single Responsibility, DI, Immutable Flow): se
+`DEVELOPMENT_PHILOSOPHY.md`.
 
 ---
 
@@ -15,7 +17,7 @@ Arkitektoniske mønstre og design principper for R-projekter.
 - `app_*.R` - Core app
 - `state_management.R` - Centralized state
 
-**Årsag:** Flad struktur gør filnavne meningsfulde, undgår at "gemme" vigtig kode dybt.
+**Årsag:** Flad struktur gør filnavne meningsfulde, undgår "gemme" vigtig kode dybt.
 
 ---
 
@@ -48,48 +50,10 @@ observeEvent(app_state$events$data_loaded, ignoreInit = TRUE,
 
 ---
 
-## Design Principles
-
-**Single Responsibility:**
-```r
-# ✅ Hver funktion har én ansvar
-load_data <- function(file_path) { readr::read_csv(file_path) }
-validate_data <- function(data) { stopifnot(nrow(data) > 0) }
-process_data <- function(data) { data |> filter(value > 0) }
-
-# Orkestrering
-full_pipeline <- function(file_path) {
-  data <- load_data(file_path)
-  validate_data(data)
-  process_data(data)
-}
-```
-
-**Dependency Injection:**
-```r
-# ✅ Dependencies som argumenter
-create_chart <- function(data, x_col, y_col, emit, theme = theme_bfh()) {
-  emit$chart_started()
-  # render chart
-  emit$chart_completed()
-}
-```
-
-**Immutable Data Flow:**
-```r
-# ✅ Return nye objekter
-transform_data <- function(data) {
-  result <- data |> mutate(new_col = x * 2)
-  result  # Return kopi, original intakt
-}
-```
-
----
-
 ## Configuration Management
 
-Typisk fil-fordeling for en Shiny/Golem-applikation. Navne er
-illustrative — tilpas til projektets domæne.
+Typisk fil-fordeling Shiny/Golem-applikation. Navne illustrative —
+tilpas projektets domæne.
 
 | Ansvar | Fil (eksempel) | Indhold |
 |--------|----------------|---------|
@@ -140,24 +104,12 @@ CACHE_CONFIG <- list(
 
 ---
 
-## Constraints
+## NAMESPACE Handling
 
-❌ **Gør IKKE:**
-- Automatiske commits uden aftale
-- Stor refaktorering uden godkendelse
-- Ændringer af centrale config files
-- Nye dependencies uden diskussion
-- **Rediger aldrig `NAMESPACE` manuelt** — filen er autogenereret
-
-✅ **GØR:**
-- Test alt før commit
-- Dokumenter arkitektur beslutninger (ADR'er)
-- Diskutér før major refactoring
-- Hold dependencies minimale
-- **NAMESPACE-opdateringer:** kør `devtools::document()` når roxygen
-  `@export`/`@importFrom` ændres. Review diffen før commit — uventede
-  ændringer i NAMESPACE er signal om utilsigtet roxygen-redigering og
-  skal stoppes
+**Aldrig rediger `NAMESPACE` manuelt** — fil autogenereret.
+Kør `devtools::document()` når roxygen `@export`/`@importFrom` ændres.
+Review diff før commit — uventede NAMESPACE-ændringer = signal om
+utilsigtet roxygen-redigering, skal stoppes.
 
 ---
 

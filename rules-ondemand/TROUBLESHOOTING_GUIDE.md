@@ -1,10 +1,10 @@
 # Troubleshooting Guide
 
-Systematisk tilgang til debugging og problemløsning.
+Systematisk tilgang debugging + problemløsning.
 
 ---
 
-## Debugging: 5 Steps
+## Debugging: 7 Steps
 
 1. Reproducer med minimal case
 2. Isolér komponent
@@ -40,7 +40,7 @@ process_data(test_data)
 # Error: [SPECIFIC ERROR MESSAGE]
 ```
 
-**Rapporter med:**
+**Rapportér med:**
 1. Hvad forsøgte du?
 2. Hvad skete i stedet?
 3. Hvad forventede du?

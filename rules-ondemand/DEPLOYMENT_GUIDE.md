@@ -1,6 +1,6 @@
 # Deployment Guide
 
-Guide til deployment af R-projekter til produktion.
+Guide deployment R-projekter til produktion.
 
 ---
 

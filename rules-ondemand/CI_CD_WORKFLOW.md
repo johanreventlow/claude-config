@@ -1,20 +1,20 @@
 # CI/CD Workflow
 
-Standards for Continuous Integration og Deployment i R-projekter.
+Standards Continuous Integration + Deployment R-projekter.
 
 ---
 
 ## Principles
 
 **CI (Continuous Integration):**
-- Automated testing på alle commits/PRs
-- Automated linting og style checks
+- Automated testing alle commits/PRs
+- Automated linting + style checks
 - Code coverage tracking
 - Platform compatibility checks
 
 **CD (Continuous Deployment):**
-- Deploy til staging efter CI
-- Manual approval for production
+- Deploy staging efter CI
+- Manual approval production
 - Rollback procedure dokumenteret
 
 ---
@@ -55,10 +55,10 @@ jobs:
 
 **Shiny App:**
 - Test + lint + Docker build
-- Deploy til staging/production
+- Deploy staging/production
 
 **Quarto:**
-- Render + deploy til GitHub Pages
+- Render + deploy GitHub Pages
 
 ---
 
@@ -99,7 +99,7 @@ jobs:
 
 ## Branch Protection
 
-**Setup → Branches → Add rule for `main`:**
+**Setup → Branches → Add rule `main`:**
 - ✅ Require pull request (1 approval)
 - ✅ Require status checks (R-CMD-check, Lint)
 - ✅ Require branches up to date
@@ -145,13 +145,13 @@ jobs:
 
 ## Checklist
 
-- [ ] Automated tests på PRs
+- [ ] Automated tests PRs
 - [ ] Linting enforced
 - [ ] Code coverage tracked (>80%)
 - [ ] Security scans (weekly)
 - [ ] Branch protection enabled
-- [ ] Deployment automated til staging
-- [ ] Manual approval for production
+- [ ] Deployment automated staging
+- [ ] Manual approval production
 - [ ] Environment secrets configured
 - [ ] Notifications setup
 

@@ -1,12 +1,12 @@
 # Shiny Advanced Patterns & Best Practices
 
-Avancerede mønstre og anti-patterns for Shiny applikationer.
+Avancerede mønstre + anti-patterns Shiny apps.
 
-> **Bemærk:** Denne fil beskriver generiske mønstre. Konkrete navne
-> (`app_state`, `emit`, `OBSERVER_PRIORITIES`, `safe_operation`) refererer
-> til typiske projekt-specifikke konstruktioner — implementation
-> dokumenteres i projektets lokale `CLAUDE.md` eller ADR'er. Juster
-> navne til dit projekts konventioner.
+> **Bemærk:** Fil beskriver generiske mønstre. Konkrete navne
+> (`app_state`, `emit`, `OBSERVER_PRIORITIES`, `safe_operation`) =
+> typiske projekt-specifikke konstruktioner — implementation
+> i projektets `CLAUDE.md` eller ADR'er. Juster
+> navne til projekt-konventioner.
 
 ---
 
@@ -14,7 +14,7 @@ Avancerede mønstre og anti-patterns for Shiny applikationer.
 
 | Pattern | Korrekt | Undgå |
 |---------|---------|-------|
-| **Event emit** | Centraliseret emit-API med navngivne events | Ad-hoc `reactiveVal()`-triggers spredt i server-kode |
+| **Event emit** | Centraliseret emit-API + navngivne events | Ad-hoc `reactiveVal()`-triggers spredt i server-kode |
 | **Listeners** | `observeEvent(<state>$events$<name>, priority = <LEVEL>, ignoreInit = TRUE)` | Uspecificeret priority |
 | **State** | Hierarkisk `reactiveValues`-struktur | Flat global state, globale `<<-`-assignments |
 
@@ -23,16 +23,16 @@ Avancerede mønstre og anti-patterns for Shiny applikationer.
 - Emit API: factory-funktion returnerer list af emit-funktioner
 - Listeners: centraliseret setup-funktion kaldt én gang per session
 
-Se projektets ARCHITECTURE_PATTERNS eller ADR for konkret navngivning.
+Se ARCHITECTURE_PATTERNS eller ADR for navngivning.
 
 ---
 
 ## Hierarchical State Management
 
-Brug hierarkisk `reactiveValues` i stedet for flat global state. Typiske
-niveauer: `events`, `data`, `ui`, `session`, `processing`.
+Brug hierarkisk `reactiveValues` ej flat global state. Niveauer:
+`events`, `data`, `ui`, `session`, `processing`.
 
-**Atomiske opdateringer via en helper (typisk `safe_operation()`):**
+**Atomiske opdateringer via helper (typisk `safe_operation()`):**
 
 ```r
 safe_operation("Update UI state", {
@@ -42,7 +42,7 @@ safe_operation("Update UI state", {
 })
 ```
 
-Projekt-specifik state-schema dokumenteres i lokal `CLAUDE.md` /
+Projekt-specifik state-schema i lokal `CLAUDE.md` /
 `ARCHITECTURE_PATTERNS.md`.
 
 ---
@@ -53,8 +53,8 @@ Projekt-specifik state-schema dokumenteres i lokal `CLAUDE.md` /
 1. **Event Architecture:** Prioriterede centraliserede listeners
 2. **State Atomicity:** Atomiske opdateringer via helper-wrapper
 3. **Functional Guards:** Check `in_progress`/`updating`-flag før update
-4. **UI Atomicity:** Sikre wrappere for UI-opdateringer
-5. **Input Debouncing:** Standard 500-800ms delay på fritekst-inputs
+4. **UI Atomicity:** Sikre wrappere UI-opdateringer
+5. **Input Debouncing:** Standard 500-800ms delay fritekst-inputs
 
 **Guard pattern (generisk):**
 ```r
@@ -72,9 +72,8 @@ update_ui_state <- function(state, new_value) {
 
 ---
 
-## Reactive Best Practices
+## Observer Priorities
 
-**Priority levels (generisk konvention):**
 ```r
 # Typisk navngivning — projekter definerer egen konstant
 OBSERVER_PRIORITIES <- list(
@@ -85,80 +84,14 @@ OBSERVER_PRIORITIES <- list(
 )
 ```
 
-**req() vs validate():**
-```r
-# req(): Simple condition check (skips hvis NULL)
-observeEvent(input$upload, {
-  req(input$upload)
-  process_file()
-})
-
-# validate(): Kompleks validering med brugervenlige fejlbeskeder
-output$chart <- renderPlot({
-  validate(
-    need(nrow(data()) > 0, "Upload data først"),
-    need(!is.null(input$x_column), "Vælg X-kolonne")
-  )
-  create_chart()
-})
-```
-
-**isolate() korrekt brug:**
-```r
-# ✅ isolate() for non-reactive reads i observer
-observeEvent(input$save_button, {
-  data <- isolate(current_data())
-  save_to_file(data)
-})
-```
+req()/validate()/isolate() basics: se `SHINY_STANDARDS.md`.
 
 ---
 
-## Performance Optimization
+## Performance Architecture
 
-**Boot strategy:**
-- Production: `library(MyApp)` (installeret pakke, ~50-100ms)
-- Debug: `source('global.R')` med verbose logging (~400ms+)
-
-**Lazy loading (generisk pattern):**
-```r
-# Registry over moduler der kun loades on-demand
-LAZY_MODULES <- list(
-  heavy_feature_a = "R/fct_heavy_feature_a.R",
-  admin_tools    = "R/utils_admin.R"
-)
-
-ensure_module_loaded <- function(name) {
-  if (!exists(name, envir = globalenv())) {
-    source(LAZY_MODULES[[name]], local = FALSE)
-  }
-}
-```
-
-**Caching (generisk pattern):**
-```r
-# TTL-baseret cache-config; navne er projekt-specifikke
-CACHE_CONFIG <- list(
-  expensive_lookup  = list(ttl = 3600),  # 1 hour
-  computed_results  = list(ttl = 1800)   # 30 min
-)
-```
-
-**Typiske performance targets:**
-- Startup: < 100ms (efter pkg-load)
-- Data operations: < 2s for interaktive filtreringer
-- Rendering: < 1s for typiske charts
-
-Projekter bør måle og dokumentere egne targets i ADR.
-
----
-
-## Error Handling
-
-Se `DEVELOPMENT_PHILOSOPHY.md` for `safe_operation()`-pattern og
-defensive programming-principper. Brug samme helper i Shiny-kontekst
-— eksempler på atomiske opdateringer er i "Hierarchical State
-Management"-sektionen ovenfor.
+Boot, lazy loading, caching, performance targets: se
+`ARCHITECTURE_PATTERNS.md` (samme tier).
 
 ---
 

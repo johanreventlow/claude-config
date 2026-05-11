@@ -1,35 +1,35 @@
 # Development Philosophy & Communication
 
-Centrale principper for udvikling og kommunikation.
+Centrale principper udvikling + kommunikation.
 
 ---
 
 ## Development Principles
 
-- **Quality > speed**: Robusthed først. TDD er default for
-  adfærdsændrende kode; ikke påkrævet for docs, kommentarer,
-  formatering, CI-config eller rene refactors uden adfærdsændring.
-- **Observability**: Struktureret logging ikke valgfrit for kode der
+- **Quality > speed**: Robusthed først. TDD default
+  adfærdsændrende kode; ej påkrævet docs, kommentarer,
+  formatering, CI-config el. rene refactors uden adfærdsændring.
+- **Observability**: Struktureret logging ej valgfrit kode der
   rammer production-paths.
-- **Test coverage (risk-based)**: Testniveau matcher ændringens risiko.
+- **Test coverage (risk-based)**: Testniveau matcher risiko.
   Kritiske paths (data-load, state-sync, beregninger der driver UI)
-  skal have test-dækning. Ambitionsmål ≥90% samlet, men ikke blokerende
-  for små bugfixes, docs eller config. Rapportér eksplicit hvilke
-  tests du kørte, sprang over, og hvorfor.
+  skal have test-dækning. Ambitionsmål ≥90% samlet, ej blokerende
+  små bugfixes, docs el. config. Rapportér eksplicit hvilke
+  tests kørt, sprunget, hvorfor.
 - **Breaking changes**: Major version bump + deprecation warnings først
   (post-1.0). Pre-1.0 MINOR må indeholde breaking — markér tydeligt.
-- **User-focused**: Design for danske klinikere/brugere
-- **Continuous improvement**: ADR'er for arkitektoniske beslutninger
+- **User-focused**: Design danske klinikere/brugere
+- **Continuous improvement**: ADR'er arkitektoniske beslutninger
 
 ---
 
 ## Communication Guidelines
 
 **Kerneprincipper:**
-- **Intellektuel ærlighed**: Vær direkte om begrænsninger og trade-offs
+- **Intellektuel ærlighed**: Direkte om begrænsninger + trade-offs
 - **Kritisk engagement**: Stil spørgsmål ved vigtige overvejelser
 - **Balanceret evaluering**: Undgå tomme komplimenter
-- **Retningsklarhed**: Fokusér på projektets langsigtede kvalitet
+- **Retningsklarhed**: Fokusér projektets langsigtede kvalitet
 
 **Kommunikationsstil:**
 - Præcise action items: "Gør X i fil Y, linje Z"
@@ -37,44 +37,7 @@ Centrale principper for udvikling og kommunikation.
 - Faktuel rapportering
 - Struktureret: Checklists, numbered steps, høj-level først
 
-**Succeskriterium:** Fremmer dette produktiv tænkning eller standser det?
-
----
-
-## Working with Claude 4.7
-
-Claude 4.7 har 1M context window og stærkere reasoning end tidligere modeller.
-Udnyt det — og undgå workarounds fra ældre model-era.
-
-### 1. Parallel tool-kald som default
-Hvis 2+ tool-kald er uafhængige (ingen afhængigheder mellem resultater),
-kør dem i samme besked. Sparer tid og context-roundtrips.
-
-### 2. Brug 1M-context direkte
-Til kodebase-analyse: læs relevante filer direkte via Read/Grep. Spawn kun
-subagent hvis output forventes > 30k tokens og du ikke har brug for
-detaljerne. Gamle Gemini-CLI-workflow er forældet.
-
-### 3. Subagent-disciplin
-Subagents er kontekst-firewall, ikke arbejdshest. Brug dem når:
-(a) parallel uafhængig søgning, (b) output er meget verbose.
-IKKE som default for alle opgaver.
-
-### 4. Koncis output
-Skriv kort. Undgå opsummering efter hver handling — brugeren kan læse diffen.
-End-of-turn summary: 1-2 sætninger, hvad ændrede sig og hvad er næste.
-
-### 5. Evidensbaseret påstande
-Før du hævder "fil X eksisterer" eller "funktion Y gør Z": verificér via
-Read/Grep. Antag ikke fra hukommelsen. Memory records kan være stale.
-
-### 6. Extended thinking ved komplekse problemer
-Brug extended thinking til: arkitektur-beslutninger, debugging af race
-conditions, cross-file refactors. Ikke til simple spørgsmål.
-
-### 7. Stol på Claude Codes system-prompt
-De indbyggede safety defaults dækker destruktive actions (force-push,
-reset --hard, shared-state changes). Duplikér ikke de regler globalt.
+**Succeskriterium:** Fremmer dette produktiv tænkning el. standser det?
 
 ---
 
@@ -104,7 +67,7 @@ quarto::quarto_render()
 ## Defensive Programming
 
 - **Input validation** ved entry points
-- **Error handling** via `tryCatch()` og `safe_operation()`
+- **Error handling** via `tryCatch()` + `safe_operation()`
 - **Scope guards** med `exists()` checks
 - **Graceful degradation** med fallback-mønstre
 - **State consistency** gennem centraliseret state
@@ -126,16 +89,26 @@ safe_operation <- function(operation_name, code, fallback = NULL, session = NULL
 
 ## Observability & Logging
 
-**Struktureret logging:**
+Struktureret logging via centralt logger-API (`log_debug`, `log_info`,
+`log_warn`, `log_error`) med `component`-tag + named `details` list.
+ALDRIG rå `cat()`. Detaljer + production-grade setup: se
+`OBSERVABILITY_STANDARDS.md` (rules-ondemand) — @-import når relevant.
+
+---
+
+## Design Principles
+
+**Single Responsibility:**
 ```r
-log_debug(component = "[APP_SERVER]", message = "Initialiserer",
-  details = list(session_id = session$token))
+# ✅ Hver funktion har ét ansvar
+load_data <- function(file_path) { readr::read_csv(file_path) }
+validate_data <- function(data) { stopifnot(nrow(data) > 0) }
+process_data <- function(data) { data |> filter(value > 0) }
 ```
 
-- Brug centralt logger-API: `log_debug()`, `log_info()`, `log_warn()`, `log_error()`
-- Angiv `component` felt
-- Tilføj data i `details` som named list
-- ALDRIG rå `cat()`-kald
+**Dependency Injection:** Dependencies som arguments, ej globals.
+
+**Immutable Data Flow:** Returnér nye objekter, mutér ej originale.
 
 ---
 
@@ -161,7 +134,7 @@ Dato: YYYY-MM-DD
 
 ## Pre-Commit Checklist (Master)
 
-- [ ] Tests kørt og bestået
+- [ ] Tests kørt + bestået
 - [ ] Manual functionality test
 - [ ] Logging valideret (strukturerede logs)
 - [ ] Error handling verificeret
@@ -181,7 +154,7 @@ Dato: YYYY-MM-DD
 - **Readability**: Selvforklarende struktur, korte funktioner
 - **Maintainability**: Ingen sideeffekter, solid testdækning, DRY principle
 - **Performance**: Effektive operationer, caching, vektorisering
-- **Consistency**: Genbrug af utils, følg eksisterende patterns
+- **Consistency**: Genbrug utils, følg eksisterende patterns
 
 ---
 
@@ -189,19 +162,19 @@ Dato: YYYY-MM-DD
 
 | Aspekt | Standard |
 |--------|----------|
-| Test coverage | Risk-based: kritiske paths dækkes; ambitionsmål ≥90% samlet; dokumentér skipped tests og hvorfor |
+| Test coverage | Risk-based: kritiske paths dækkes; ambitionsmål ≥90% samlet; dokumentér skipped tests + hvorfor |
 | Performance | Startup <100ms (Shiny), render <1s |
-| Documentation | Roxygen2 for alle exports, ADR'er for arkitektur |
+| Documentation | Roxygen2 alle exports, ADR'er arkitektur |
 | Logging | Struktureret, komponenter tagget, context-aware |
-| Error handling | `tryCatch()` eller `safe_operation()` for kritiske paths |
+| Error handling | `tryCatch()` el. `safe_operation()` kritiske paths |
 
 ---
 
 ## Breaking Changes Policy
 
-Breaking change-regler er nu konsolideret i `VERSIONING_POLICY.md` (§A semver,
-§C NEWS-template, §F pre-1.0/1.0-overgang). Se denne fil for:
-- Hvornår MAJOR vs MINOR (afhænger af pre-1.0 vs post-1.0)
+Breaking change-regler konsolideret i `VERSIONING_POLICY.md` (§A semver,
+§C NEWS-template, §F pre-1.0/1.0-overgang). Se fil for:
+- Hvornår MAJOR vs MINOR (afhænger pre-1.0 vs post-1.0)
 - Hvordan breaking changes dokumenteres i NEWS.md
 - Cross-repo bump-protokol når sibling-pakke bryder API
 - Pre-release checklist (inkl. eksplicitte `BREAKING CHANGE:`-commit-noter)

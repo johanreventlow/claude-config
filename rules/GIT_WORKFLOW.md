@@ -1,6 +1,6 @@
 # Git Workflow Standards
 
-Standarder for Git workflow og version control.
+Standarder Git workflow + version control.
 
 ---
 
@@ -11,7 +11,7 @@ Standarder for Git workflow og version control.
 - `fix/` - Bug fixes
 - `refactor/` - Code refactoring
 - `docs/` - Dokumentation
-- `test/` - Test-relaterede ændringer
+- `test/` - Test-ændringer
 - `chore/` - Vedligeholdelse
 
 **Opret feature branch:**
@@ -27,13 +27,13 @@ git checkout -b fix/bug-beskrivelse
 ❌ **ALDRIG:**
 1. Merge til master/main uden eksplicit godkendelse
 2. Push til remote uden anmodning
-3. Tilføj Claude attribution footers:
+3. Claude attribution footers:
    - ❌ "🤖 Generated with [Claude Code]"
    - ❌ "Co-Authored-By: Claude <noreply@anthropic.com>"
 
-✅ **OK uden aftale (på feature branch):**
-- Flere commits i serie på samme feature branch indtil opgaven er logisk afsluttet
-- Rediger og skriv filer (Claude Codes system-prompt håndterer allerede "check med bruger før hard-to-reverse actions")
+✅ **OK uden aftale (feature branch):**
+- Flere commits i serie samme feature branch indtil opgave logisk afsluttet
+- Rediger + skriv filer (Claude Code system-prompt håndterer "check bruger før hard-to-reverse actions")
 
 ✅ **OK uden aftale (generelt):**
 - `git status`, `git diff`, `git log`
@@ -55,9 +55,9 @@ Længere forklaring (hvorfor, ikke hvordan).
 **Types:**
 `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`, `style`
 
-**Versionering:** For regler om version-bump, NEWS-format, git-tags og
+**Versionering:** Regler version-bump, NEWS-format, git-tags +
 cross-repo bump-protokol — se `VERSIONING_POLICY.md`. Commit-prefixes
-afgør default bump-størrelse (`feat:` → MINOR, `fix:` → PATCH, `BREAKING CHANGE:` → MAJOR).
+afgør default bump (`feat:` → MINOR, `fix:` → PATCH, `BREAKING CHANGE:` → MAJOR).
 
 ---
 
@@ -72,97 +72,44 @@ devtools::check()  # For packages
 ```
 
 **Manual checklist:** Se `DEVELOPMENT_PHILOSOPHY.md` → "Pre-Commit Checklist
-(Master)" for den komplette liste (tests, logging, error handling, performance,
+(Master)" komplet liste (tests, logging, error handling, performance,
 docs, formatering, linting, NAMESPACE, debug statements, secrets).
 
 ---
 
 ## Pull Request Process
 
-> ⚠️ **Windows:** `gh` CLI er IKKE installeret i managed-miljø. Se
-> `WINDOWS_ENVIRONMENT.md` for alternativer (`git push -u origin <branch>`
-> + manuel PR-oprettelse i browser).
+**ALTID `--draft`** — bruger markerer selv "Ready for review" efter godkendelse.
+Gælder ved direkte PR-oprettelse, skills (`commit-push-pr`, `triage-and-ship`,
+osv.) og enhver anden kontekst.
 
-**Via GitHub CLI (macOS/Linux):**
 ```bash
-gh pr create \
-  --title "Feat: Beskrivelse" \
-  --body "## Ændringer
-- Punkt 1
-- Punkt 2
+gh pr create --draft --title "feat(scope): beskrivelse" --body "$(cat <<'EOF'
+## Summary
+<1-3 bullet points>
 
 ## Test plan
-- [x] Unit tests
-- [x] Manual test"
+[Bulleted markdown checklist of TODOs for testing the pull request...]
+EOF
+)"
 ```
 
-**Uden gh CLI (Windows eller anden begrænsning):**
-```bash
-git push -u origin feat/ny-feature
-# Åbn i browser: https://github.com/<owner>/<repo>/compare/feat/ny-feature
-# Udfyld PR-beskrivelse manuelt
-```
+Brug `## Test plan` til uafkrydsede items for kendte gaps / manglende tests.
 
-**PR checklist:**
-- [ ] Kode følger style guide
-- [ ] Tests bestået
-- [ ] Dokumentation opdateret
-- [ ] Ingen breaking changes (eller dokumenteret)
+Windows uden `gh` CLI: se `WINDOWS_ENVIRONMENT.md` (rules-ondemand).
 
----
-
-## Common Operations
-
-**Sync med main:**
-```bash
-git checkout main
-git pull origin main
-git checkout feat/ny-feature
-git rebase main  # Eller: git merge main
-```
-
-**Fix mistakes:**
-```bash
-# Undo sidste commit (behold ændringer)
-git reset --soft HEAD~1
-
-# Amend sidste commit
-git commit --amend -m "Ny besked"
-```
-
-**Stashing:**
-```bash
-git stash        # Gem arbejde
-git stash pop    # Hent tilbage
-```
-
----
-
-## Branch Hygiene
-
-```bash
-# Slet merged branches
-git branch -d feat/old-feature
-git push origin --delete feat/old-feature
-git fetch --prune
-```
+**PR checklist:** Kode følger style + tests bestået + docs opdateret +
+breaking changes dokumenteret.
 
 ---
 
 ## Safety Rules
 
-❌ **Never:**
-- Force push til shared branches: `git push --force origin main`
-- Commit sensitive data (API keys, passwords, credentials)
-- Commit generated files (tilføj til `.gitignore`):
-  - `*.Rhistory`, `.RData`, `*.rds`, `_site/`
+❌ Aldrig: force push shared branches, commit secrets/API keys, commit
+generated files (`.Rhistory`, `.RData`, `*.rds`, `_site/`).
 
-✅ **Always:**
-- Pull før push
-- Test før commit
-- Review egen diff før commit
-- Write meaningful commit messages
-- Keep commits focused and atomic
+✅ Altid: pull før push, test før commit, review egen diff, focused +
+atomic commits.
 
 ---
 
