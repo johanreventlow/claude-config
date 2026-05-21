@@ -30,6 +30,9 @@ git checkout -b fix/bug-beskrivelse
 3. Claude attribution footers:
    - ❌ "🤖 Generated with [Claude Code]"
    - ❌ "Co-Authored-By: Claude <noreply@anthropic.com>"
+4. Bypass pre-commit/pre-push hooks uden eksplicit godkendelse
+   (`--no-verify`, `--no-gpg-sign`, `SKIP_*=1`-env-flags).
+   Fejlende hook = fix root cause, ej bypass.
 
 ✅ **OK uden aftale (feature branch):**
 - Flere commits i serie samme feature branch indtil opgave logisk afsluttet

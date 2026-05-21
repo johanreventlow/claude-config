@@ -30,6 +30,8 @@ settings.json
 cache/
 stats-cache.json
 mcp-needs-auth-cache.json
+.caveman-active
+.last-cleanup
 
 # Local backups and session data
 backups/
