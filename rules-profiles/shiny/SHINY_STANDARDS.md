@@ -1,205 +1,69 @@
 # Shiny Development Standards
 
-Standarder R Shiny apps.
+Org-specifikke konventioner Shiny apps i BFH-økosystemet.
 
 ---
 
-## Reactive Programming
+## Navngivning
 
-**Best practices:**
-- `req()` input validation
-- `validate()` brugervenlige fejlbeskeder
-- `isolate()` bryd reactive dependencies
-- Undgå reactive pollution (unødvendige dependencies)
+| Element | Konvention | Eksempel |
+|---------|-----------|---------|
+| Module UI | `mod_<navn>_ui` | `mod_upload_ui` |
+| Module server | `mod_<navn>_server` | `mod_upload_server` |
+| Hjælpefunktioner (server-logik) | `fct_<verb>_<noun>` | `fct_load_data`, `fct_validate_input` |
+| Utilities (delt hjælper) | `utils_<navn>` | `utils_formatting`, `utils_date` |
+| UI IDs | `camelCase` | `fileUpload`, `dataTable` |
+| Server-funktioner | `snake_case` | `process_upload`, `validate_data` |
 
-**Observer patterns:**
-```r
-# ✅ Korrekt observeEvent
-observeEvent(input$button, {
-  req(input$data)
-  process_data(input$data)
-})
-
-# ✅ Reactive expressions for computed values
-filtered_data <- reactive({
-  req(input$filter)
-  data |> filter(category == input$filter)
-})
-```
-
-**Reactive hierarchy:**
-1. **Input** - Fra UI (`input$*`)
-2. **Reactive expressions** - Computed values (`reactive({})`)
-3. **Observers** - Side effects (`observeEvent`, `observe`)
-4. **Output** - Til UI (`output$*`)
-
----
-
-## Module Pattern
-
-```r
-# UI
-my_module_ui <- function(id) {
-  ns <- NS(id)
-  tagList(
-    selectInput(ns("input"), "Vælg:", choices = ...),
-    plotOutput(ns("plot"))
-  )
-}
-
-# Server
-my_module_server <- function(id, data) {
-  moduleServer(id, function(input, output, session) {
-    output$plot <- renderPlot({
-      plot(data())
-    })
-  })
-}
-```
-
-**Naming:**
-- UI IDs: `camelCase` (fx `fileUpload`, `dataTable`)
-- Server functions: `snake_case` (fx `process_upload`, `validate_data`)
-- Modules: Konsistent prefix (`mod_upload_ui`, `mod_upload_server`)
+**Module-fil:** `R/mod_<navn>.R` indeholder begge (`_ui` + `_server`).
 
 ---
 
 ## State Management
 
-Centraliseret `reactiveValues` (ej globale mutable variables — deles
-mellem sessions). Detaljer + hierarkisk struktur + event architecture +
-race conditions: se `SHINY_ADVANCED_PATTERNS.md`.
+Centraliseret `reactiveValues` — aldrig globale mutable variables (deles
+mellem sessions via `<<-`). Hierarkisk struktur, event-architecture, race
+conditions: se `SHINY_ADVANCED_PATTERNS.md`.
 
 ---
 
-## Performance
+## Fejlhåndtering
 
-**Debouncing/Throttling:**
-```r
-debounced_input <- debounce(reactive(input$text), 1000)
-throttled_slider <- throttle(reactive(input$slider), 500)
-```
-
-**Caching:**
-```r
-expensive_result <- reactive({
-  req(input$data)
-  process_large_dataset(input$data)  # Kun genberegn når input$data ændres
-})
-```
+Brugervenlige fejlbeskeder via `validate(need(...))`. Graceful degradation
+via `safe_operation()` (se `DEVELOPMENT_PHILOSOPHY.md`). Input-sanitering,
+filupload-validering, XSS, SQL injection: se `SECURITY_BEST_PRACTICES.md`.
 
 ---
 
-## Error Handling
+## Anti-Patterns
 
-**User-friendly errors:**
-```r
-output$table <- renderTable({
-  validate(
-    need(input$file, "Upload venligst en fil"),
-    need(nrow(data()) > 0, "Filen indeholder ingen data")
-  )
-  data()
-})
-```
-
-**Graceful degradation:**
-```r
-safe_data <- reactive({
-  tryCatch({
-    load_data(input$source)
-  }, error = function(e) {
-    showNotification("Kunne ikke indlæse data. Bruger cached version.", type = "warning")
-    return(cached_data)
-  })
-})
-```
-
----
-
-## Testing
-
-**shinytest2:**
-```r
-library(shinytest2)
-
-test_that("Upload functionality works", {
-  app <- AppDriver$new()
-  app$upload_file(upload = test_file.csv)
-  app$expect_values(output = "dataTable")
-})
-```
-
-**Manual checklist:**
-- [ ] Test tomme inputs
-- [ ] Test ugyldige inputs
-- [ ] Test reactive chains
-- [ ] Test session cleanup
-- [ ] Test forskellige browsere
-
----
-
-## UI Best Practices
-
-**Responsive design:**
-```r
-fluidRow(
-  column(4, selectInput(...)),
-  column(8, plotOutput(...))
-)
-```
-
-**Accessibility:**
-- Beskrivende labels
-- `aria-label` skærmlæsere
-- Keyboard navigation
-- Passende farvekontrast
-
-**Loading states:**
-```r
-output$plot <- renderPlot({
-  req(input$data)
-  withProgress(message = 'Beregner...', {
-    result <- complex_analysis(input$data)
-    incProgress(0.5)
-    plot(result)
-  })
-})
-```
-
----
-
-## Security
-
-Input sanitization, file upload validation, XSS, SQL injection: se
-`SECURITY_BEST_PRACTICES.md` (auto-loaded Tier 1).
-
----
-
-## Common Pitfalls
-
-**Undgå:**
 ```r
 # ❌ Reactive expressions i loops
 for (i in 1:10) {
   output[[paste0("plot", i)]] <- renderPlot({ reactive_data() })
 }
 
-# ❌ Lange reactive chains (>5 steps)
-data1 <- reactive({ ... })
-data2 <- reactive({ process(data1()) })
-data3 <- reactive({ process(data2()) })
-# Kombiner til færre steps
+# ❌ Lange reactive chains (>5 steps) — kombiner til færre steps
 
-# ❌ Global variables i server
+# ❌ Global variables i server (deles mellem sessions)
 my_var <- NULL
 server <- function(input, output, session) {
   observeEvent(input$button, {
-    my_var <<- input$value  # Deles mellem sessions!
+    my_var <<- input$value
   })
 }
 ```
 
 ---
 
-**Sidst opdateret:** 2025-10-21
+## Testing
+
+**shinytest2** til integration-tests. Manuel checklist:
+- [ ] Tomme + ugyldige inputs
+- [ ] Reactive chains
+- [ ] Session cleanup (`session$onSessionEnded`)
+- [ ] Tilgængelighed (labels, keyboard navigation)
+
+---
+
+**Sidst opdateret:** 2026-06-12
