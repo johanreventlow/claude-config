@@ -23,6 +23,7 @@ Universelle for alle R-projekter. Ladet automatisk hver session.
 Project-type-specifikke. Project CLAUDE.md @-importerer relevant profil.
 
 - `shiny/` — SHINY_STANDARDS, SHINY_ADVANCED_PATTERNS, ARCHITECTURE_PATTERNS
+- `typescript/` — TYPESCRIPT_STANDARDS, POWERBI_VISUAL_STANDARDS (sub-profil)
 
 ### Tier 3: On-demand (`~/.claude/rules-ondemand/*.md`)
 Sjældent-relevante. Manuel @-import når aktivt brug.
@@ -41,9 +42,17 @@ Sjældent-relevante. Manuel @-import når aktivt brug.
 ### Trin 1: Identificér projekttype
 
 Læs lokal `CLAUDE.md` → `## Project Overview` → identificér type:
-**Shiny** | **R Package** | **Quarto** | **Generic R** (default)
+**Shiny** | **R Package** | **Quarto** | **TypeScript** | **Power BI Visual** | **Generic R** (default)
 
 Ingen `CLAUDE.md` eller type: antag **Generic R**.
+
+**TypeScript-detektion:** `package.json` + `tsconfig.json` til stede.
+**Power BI Visual-detektion:** TypeScript + `pbiviz.json` + `capabilities.json`.
+
+**Konsekvens for TS-projekter:** R_STANDARDS.md auto-loades stadig
+(Tier 1), men er irrelevant — ignorér R-specifikke regler.
+DEVELOPMENT_PHILOSOPHY, GIT_WORKFLOW, SECURITY, VERSIONING (semver-del)
+forbliver gyldige.
 
 ### Trin 1b: Platform-detektion
 
@@ -69,6 +78,17 @@ Project CLAUDE.md tilføjer @-imports for projekt-type-rules:
 **Quarto:**
 ```
 @~/.claude/rules-ondemand/QUARTO_STANDARDS.md
+```
+
+**TypeScript:**
+```
+@~/.claude/rules-profiles/typescript/TYPESCRIPT_STANDARDS.md
+```
+
+**Power BI Visual** (TypeScript + pbiviz):
+```
+@~/.claude/rules-profiles/typescript/TYPESCRIPT_STANDARDS.md
+@~/.claude/rules-profiles/typescript/POWERBI_VISUAL_STANDARDS.md
 ```
 
 ### Trin 3: On-demand-imports
@@ -117,5 +137,5 @@ Detaljer: `GIT_WORKFLOW.md`.
 
 ---
 
-**Sidst opdateret:** 2026-04-28
+**Sidst opdateret:** 2026-05-19
 **Del af:** ~/.claude/ global configuration system

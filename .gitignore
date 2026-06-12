@@ -32,6 +32,7 @@ stats-cache.json
 mcp-needs-auth-cache.json
 .caveman-active
 .last-cleanup
+.last-*.json
 
 # Local backups and session data
 backups/
@@ -39,6 +40,7 @@ plans/
 telemetry/
 usage-data/
 security_warnings_state*
+security/
 
 # Exclude stray CLAUDE.md (projects have their own)
 CLAUDE.md
