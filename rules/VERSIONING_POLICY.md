@@ -137,17 +137,10 @@ Pakke kan bumpes til `1.0.0` når **alle** følgende holder:
 
 ## G. Repo-specifikke noter
 
-> ⚠️ **Versioner i tabel er eksempler + bliver hurtigt stale.**
-> Før handling på versionsinfo: verificér mod `DESCRIPTION`, `git tag -l`,
-> eller GitHub-releases. Brug tabel som orienteringspunkt, ej
-> autoritativ fakta.
-
-| Pakke | Eksempel-version | Tag-historik | Bemærkning |
-|-------|------------------|--------------|------------|
-| `biSPCharts` | eksempel: 0.2.0 | Blandet (`-dev`-suffix legacy) | Brug `vX.Y.Z` fremadrettet; `-dev`-tags bevares som historik |
-| `BFHcharts` | eksempel: 0.7.2 | `vX.Y.Z` konsistent | Følger politik |
-| `BFHllm` | eksempel: 0.1.1 | `vX.Y.Z` | Følger politik |
-| `BFHtheme` | eksempel: 0.4.0 | Ingen tags før retroaktiv `v0.4.0` | Tag fremadrettet ved hver release |
+Økosystem-pakker: `biSPCharts`, `BFHcharts`, `BFHllm`, `BFHtheme`.
+Alle bruger `vX.Y.Z`-tags fremadrettet (biSPCharts har legacy
+`-dev`-suffix-tags der bevares som historik). Aktuel version verificeres
+altid mod repo — aldrig fra hukommelse:
 
 **Verifikationskommandoer:**
 ```bash
