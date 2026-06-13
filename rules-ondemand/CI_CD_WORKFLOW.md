@@ -1,70 +1,12 @@
 # CI/CD Workflow
 
-Standards Continuous Integration + Deployment R-projekter.
+Org-specifikke CI/CD-konventioner R-projekter.
 
 ---
 
-## Principles
+## Code Quality Gates (CI)
 
-**CI (Continuous Integration):**
-- Automated testing alle commits/PRs
-- Automated linting + style checks
-- Code coverage tracking
-- Platform compatibility checks
-
-**CD (Continuous Deployment):**
-- Deploy staging efter CI
-- Manual approval production
-- Rollback procedure dokumenteret
-
----
-
-## GitHub Actions Basics
-
-**Common R actions:**
-```yaml
-- uses: actions/checkout@v3
-- uses: r-lib/actions/setup-r@v2
-  with:
-    r-version: '4.3.2'
-- uses: r-lib/actions/setup-renv@v2     # Auto caching
-- uses: r-lib/actions/setup-pandoc@v2
-- uses: quarto-dev/quarto-actions/setup@v2
-```
-
----
-
-## Workflows by Type
-
-**R Package:**
-```yaml
-# .github/workflows/R-CMD-check.yml
-jobs:
-  check:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu, windows, macos]
-        r: ['4.2.3', '4.3.2']
-    steps:
-      - uses: actions/checkout@v3
-      - uses: r-lib/actions/setup-r@v2
-      - uses: r-lib/actions/setup-r-dependencies@v2
-      - run: rcmdcheck::rcmdcheck(args = "--no-manual")
-```
-
-**Shiny App:**
-- Test + lint + Docker build
-- Deploy staging/production
-
-**Quarto:**
-- Render + deploy GitHub Pages
-
----
-
-## Code Quality
-
-**Linting:**
+**lintr som CI-gate:**
 ```yaml
 - run: |
     lints <- lintr::lint_package()
@@ -72,7 +14,7 @@ jobs:
   shell: Rscript {0}
 ```
 
-**Style check:**
+**styler som CI-gate:**
 ```yaml
 - run: |
     restyled <- styler::style_pkg(dry = "on")
@@ -80,81 +22,44 @@ jobs:
   shell: Rscript {0}
 ```
 
----
-
-## Caching
-
-```yaml
-# renv auto-caching
-- uses: r-lib/actions/setup-renv@v2
-
-# Docker layer caching
-- uses: docker/build-push-action@v4
-  with:
-    cache-from: type=gha
-    cache-to: type=gha,mode=max
-```
+Begge gates = obligatoriske. Kode fails CI hvis lints > 0 eller style-diff.
 
 ---
 
-## Branch Protection
+## Branch Protection (`main`)
 
-**Setup → Branches → Add rule `main`:**
+**GitHub → Settings → Branches → Add rule `main`:**
 - ✅ Require pull request (1 approval)
-- ✅ Require status checks (R-CMD-check, Lint)
-- ✅ Require branches up to date
+- ✅ Require status checks: R-CMD-check, Lint, Style
+- ✅ Require branches up to date before merging
 - ✅ Include administrators
 
 ---
 
-## Secrets Management
+## Notifikationer
 
-**Setup secrets:** Repository → Settings → Secrets and variables → Actions
-
-**Brug:**
-```yaml
-env:
-  API_KEY: ${{ secrets.API_KEY }}
-```
-
-**Environment secrets:**
-```yaml
-jobs:
-  deploy-prod:
-    environment: production
-    steps:
-      - env:
-          PROD_API_KEY: ${{ secrets.PROD_API_KEY }}
-```
-
----
-
-## Notifications
-
-**Slack:**
+**Slack ved build-fejl:**
 ```yaml
 - if: failure()
   uses: slackapi/slack-github-action@v1
   with:
     webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
     payload: |
-      {"text": "❌ Build failed: ${{ github.repository }}"}
+      {"text": "❌ Build failed: ${{ github.repository }} — ${{ github.ref }}"}
 ```
 
 ---
 
 ## Checklist
 
-- [ ] Automated tests PRs
-- [ ] Linting enforced
-- [ ] Code coverage tracked (>80%)
-- [ ] Security scans (weekly)
-- [ ] Branch protection enabled
-- [ ] Deployment automated staging
-- [ ] Manual approval production
-- [ ] Environment secrets configured
-- [ ] Notifications setup
+- [ ] lintr enforced (0 lints krav)
+- [ ] styler enforced (clean diff krav)
+- [ ] Code coverage tracked (≥80 %)
+- [ ] Security scans (ugentligt)
+- [ ] Branch protection aktiveret på `main`
+- [ ] Environment-secrets konfigureret per env
+- [ ] Slack-notifikationer ved fejl
 
 ---
 
-**Sidst opdateret:** 2025-10-21
+**Sidst opdateret:** 2026-06-12

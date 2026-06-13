@@ -148,4 +148,4 @@ profvis::profvis({ runApp() })
 
 ---
 
-**Sidst opdateret:** 2026-04-23
+**Sidst opdateret:** 2026-06-12

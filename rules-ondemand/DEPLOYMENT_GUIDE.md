@@ -1,154 +1,72 @@
 # Deployment Guide
 
-Guide deployment R-projekter til produktion.
+Org-specifikke deployment-konventioner R/Shiny apps.
 
 ---
 
-## Production Checklist
+## Miljø-konfiguration
 
-- [ ] Tests passed
-- [ ] Linting clean
-- [ ] renv.lock updated
-- [ ] No secrets in code
-- [ ] Environment vars configured
-- [ ] Logging enabled
-- [ ] Health check endpoint
-- [ ] Performance tested
-- [ ] Documentation updated
-
----
-
-## Environment Management
-
-| Environment | Deploy | Purpose |
-|-------------|--------|---------|
-| Development | Lokalt | Udvikling |
-| Testing/Staging | Separat server | QA, integration |
-| Production | Production server | Live brugere |
-
-**Config pattern:**
 ```r
 get_config <- function() {
   env <- Sys.getenv("APP_ENV", "development")
   config_file <- switch(env,
     "production" = "config/config_prod.yml",
-    "testing" = "config/config_test.yml",
+    "testing"    = "config/config_test.yml",
     "config/config_dev.yml"
   )
   yaml::read_yaml(config_file)
 }
 ```
 
+`APP_ENV` sættes i platform-miljøet — aldrig hardkodet.
+
 ---
 
-## Deployment Commands
+## RStudio Connect (primær platform)
 
-**RStudio Connect:**
 ```r
 rsconnect::deployApp(appDir = ".", appName = "my-app")
 ```
-Env vars: RStudio Connect UI → Content → Vars
 
-**shinyapps.io:**
-```r
-rsconnect::deployApp()
-```
-Env vars: shinyapps.io dashboard
-
-**Docker:**
-```bash
-docker build -t app:tag .
-docker compose up -d
-```
-Env vars: `docker-compose.yml` `env_file: .env`
-
-**Quarto:**
-```bash
-quarto publish gh-pages
-```
+- Env vars: RStudio Connect UI → Content → Vars
+- Rollback: `rsconnect::rollbackDeployment(deploymentId = "12345")`
+- `renv.lock` skal være opdateret inden deploy
 
 ---
 
-## Docker Setup
-
-**Dockerfile:**
-```dockerfile
-FROM rocker/shiny-verse:4.3.2
-WORKDIR /app
-COPY renv.lock renv.lock
-COPY .Rprofile .Rprofile
-COPY renv/activate.R renv/activate.R
-RUN R -e "renv::restore()"
-COPY . /app
-EXPOSE 3838
-CMD ["R", "-e", "shiny::runApp('/app', host = '0.0.0.0', port = 3838)"]
-```
-
-**docker-compose.yml:**
-```yaml
-services:
-  app:
-    build: .
-    ports:
-      - "3838:3838"
-    environment:
-      - API_KEY=${API_KEY}
-    env_file:
-      - .env  # Git ignored
-    restart: unless-stopped
-```
-
----
-
-## Health Checks
+## Health Check (Plumber API-endpoint)
 
 ```r
 #* @get /health
 function() {
-  checks <- list(
-    db = check_db(),
-    cache = check_cache()
-  )
+  checks <- list(db = check_db(), cache = check_cache())
+  all_healthy <- all(sapply(checks, isTRUE))
   list(status = if (all_healthy) "ok" else "unhealthy", checks = checks)
 }
 ```
 
 ---
 
-## Rollback
+## Fejlfinding
 
-**RStudio Connect:**
-```r
-rsconnect::rollbackDeployment(deploymentId = "12345")
-```
-
-**Docker:**
-```bash
-docker tag app:v1.1.0 app:latest
-docker compose up -d
-```
+| Problem | Fix |
+|---------|-----|
+| "Package X not found" | Verificér `renv.lock` er opdateret + committed |
+| "Secret not found" | Tjek env vars i RConnect UI → Content → Vars |
+| Database connection fails | Verificér netværk, credentials, firewall-regler |
+| "Works locally, not prod" | Tjek `APP_ENV`-var, fil-stier, strukturerede logs |
 
 ---
 
-## Platform Comparison
+## Checklist
 
-| Feature | RStudio Connect | shinyapps.io | Docker |
-|---------|----------------|--------------|--------|
-| Ease | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
-| Scalability | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| Best For | Enterprise | Prototypes | Custom infra |
-
----
-
-## Troubleshooting
-
-| Issue | Fix |
-|-------|-----|
-| "Package X not found" | Verify `renv.lock` updated |
-| "Secret not found" | Check env vars i platform |
-| Database connection fails | Verify network, credentials, firewall |
-| "Works locally, not prod" | Check `APP_ENV` var, file paths, logs |
+- [ ] Tests bestået
+- [ ] `renv.lock` opdateret
+- [ ] Ingen secrets i kode
+- [ ] `APP_ENV` konfigureret korrekt
+- [ ] Health check endpoint fungerer
+- [ ] Logging aktiveret (strukturerede logs)
 
 ---
 
-**Sidst opdateret:** 2025-10-21
+**Sidst opdateret:** 2026-06-12
